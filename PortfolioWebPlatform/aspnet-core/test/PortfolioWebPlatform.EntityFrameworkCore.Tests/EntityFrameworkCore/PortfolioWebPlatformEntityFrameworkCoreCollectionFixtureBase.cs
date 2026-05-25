@@ -1,0 +1,9 @@
+﻿using PortfolioWebPlatform.EntityFrameworkCore;
+using Xunit;
+
+namespace PortfolioWebPlatform.EntityFrameworkCore;
+
+public class PortfolioWebPlatformEntityFrameworkCoreCollectionFixtureBase : ICollectionFixture<PortfolioWebPlatformEntityFrameworkCoreFixture>
+{
+
+}
