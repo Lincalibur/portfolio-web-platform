@@ -263,3 +263,6 @@ src/PortfolioWebPlatform.Blazor.Server.Tiered/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*
+
+# Secrets
+appsettings.secrets.json
