@@ -1,9 +1,0 @@
-﻿using Xunit;
-
-namespace PortfolioWebPlatform.EntityFrameworkCore;
-
-[CollectionDefinition(PortfolioWebPlatformTestConsts.CollectionDefinitionName)]
-public class PortfolioWebPlatformEntityFrameworkCoreCollection : ICollectionFixture<PortfolioWebPlatformEntityFrameworkCoreFixture>
-{
-
-}
