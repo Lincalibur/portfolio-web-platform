@@ -38,3 +38,15 @@ yarn-error.log*
 # Angular build output logs and directories
 /dist
 /.angular
+
+# .NET
+**/bin/
+**/obj/
+**/App_Data/*.db
+**/App_Data/*.db-*
+*.user
+*.suo
+.vs/
+*.DotSettings.user
+openiddict.pfx
+Logs/
