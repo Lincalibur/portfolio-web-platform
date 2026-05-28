@@ -181,6 +181,8 @@ Compare to ABP + SQL Server, which often exceeds **1 GB** before the frontend co
 
 ## 7. Implementation Roadmap
 
+Detailed **feature-by-feature** delivery (one PR per feature, feature-flagged endpoints, frontend fixtures instead of bulk mock APIs) lives in [`implementationPlan.md`](implementationPlan.md).
+
 ### Phase 1: Scaffold & local dev (Week 1)
 
 * Create `src/Portfolio.Api` — Minimal API, EF Core SQLite, initial migration for `VisitorLead` / `InteractionLog`.
