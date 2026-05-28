@@ -10,6 +10,21 @@ public static class EndpointRouteBuilderExtensions
 {
     public static IEndpointRouteBuilder MapPortfolioEndpoints(this IEndpointRouteBuilder app)
     {
+        app.MapGet("/", () => Results.Ok(new
+        {
+            name = "Portfolio.Api",
+            status = "running",
+            endpoints = new
+            {
+                health = "/health",
+                requestAccess = "POST /api/auth/request-access",
+                verify = "POST /api/auth/verify",
+                hostStats = "GET /api/host/stats (JWT required)"
+            }
+        }))
+            .WithName("Root")
+            .WithTags("Meta");
+
         app.MapGet("/health", () => Results.Ok(new { status = "healthy" }))
             .WithName("Health")
             .WithTags("Health");
