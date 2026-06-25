@@ -1,0 +1,560 @@
+{
+  "info": {
+    "_postman_id": "portfolio-api-collection",
+    "name": "Portfolio.Api",
+    "description": "API tests aligned with Docs/implementationPlan.md (features F0, F2, F4, F6).\n\n**Setup**\n1. Import this collection and `Portfolio.Local.postman_environment.json`.\n2. Select the **Portfolio — Local** environment.\n3. Trust the ASP.NET dev certificate (`dotnet dev-certs https --trust`).\n4. Run the API (`dotnet run --project src/Portfolio.Api`).\n\n**Auth flow**\n1. Run **F2 → Request access**.\n2. Copy OTP from the API console (when SMTP is not configured).\n3. Set environment variable `otpCode`, then run **F2 → Verify OTP** (saves `accessToken`).\n\n**Feature flags**\nF4/F6 requests expect routes to exist. If `Features:HostStats` or `Features:InteractionMetrics` are false, you will get **404** — see implementation plan.\n\nKeep this collection updated when adding endpoints (one folder per feature).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7262"
+    }
+  ],
+  "item": [
+    {
+      "name": "F0 — Baseline",
+      "description": "Always available. See implementation plan F0.",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/health"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Body reports healthy', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('healthy');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Root (API info)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Portfolio API metadata', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.name).to.eql('Portfolio.Api');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "F2 — Gateway (Auth)",
+      "description": "Public, rate-limited. OTP is logged to the API console when SMTP is empty.",
+      "item": [
+        {
+          "name": "Request access",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{testFullName}}\",\n  \"email\": \"{{testEmail}}\",\n  \"company\": \"{{testCompany}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/request-access"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Success message returned', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a('string').and.not.empty;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"code\": \"{{otpCode}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/verify"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('JWT issued', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.accessToken).to.be.a('string').and.not.empty;",
+                  "    pm.environment.set('accessToken', json.accessToken);",
+                  "    pm.environment.set('tokenExpiresAt', json.expiresAt);",
+                  "    pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verify OTP (invalid — expect 401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"code\": \"000001\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/verify"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Request access (invalid email — expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Test\",\n  \"email\": \"not-an-email\",\n  \"company\": null\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/request-access"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "F4 — Interaction metrics",
+      "description": "Requires JWT (`accessToken`). Enable `Features:InteractionMetrics` when implemented (F0).",
+      "item": [
+        {
+          "name": "Log interaction — gateway view",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blockId\": \"gateway\",\n  \"eventType\": \"view\",\n  \"payloadJson\": null\n}"
+            },
+            "url": "{{baseUrl}}/api/metrics/interaction"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.environment.get('accessToken')) {",
+                  "    console.warn('Run F2 → Verify OTP first to set accessToken.');",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 204 or 404 if feature disabled', function () {",
+                  "    pm.expect([204, 404]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 204) {",
+                  "    pm.test('No content body', function () {",
+                  "        pm.expect(pm.response.text()).to.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Log interaction — pipeline node click",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blockId\": \"pipeline\",\n  \"eventType\": \"node_click\",\n  \"payloadJson\": \"{\\\"nodeId\\\":\\\"build\\\"}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/metrics/interaction"
+          },
+          "response": []
+        },
+        {
+          "name": "Log interaction (no JWT — expect 401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blockId\": \"gateway\",\n  \"eventType\": \"view\",\n  \"payloadJson\": null\n}"
+            },
+            "url": "{{baseUrl}}/api/metrics/interaction"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "F6 — Host stats (Orchestration)",
+      "description": "Requires JWT. Enable `Features:HostStats` when implemented (F0).",
+      "item": [
+        {
+          "name": "Get host stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/host/stats"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.environment.get('accessToken')) {",
+                  "    console.warn('Run F2 → Verify OTP first to set accessToken.');",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 or 404 if feature disabled', function () {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Stats shape', function () {",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json).to.have.property('cpuPercent');",
+                  "        pm.expect(json).to.have.property('containerStatuses');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get host stats (no JWT — expect 401)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/host/stats"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Flows",
+      "description": "Run in order via Collection Runner.",
+      "item": [
+        {
+          "name": "01 — Health check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          },
+          "response": []
+        },
+        {
+          "name": "02 — Request access",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{testFullName}}\",\n  \"email\": \"{{testEmail}}\",\n  \"company\": \"{{testCompany}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/request-access"
+          },
+          "response": []
+        },
+        {
+          "name": "03 — Verify OTP (set otpCode in environment first)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"code\": \"{{otpCode}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/verify"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.environment.set('accessToken', json.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 — Log interaction",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blockId\": \"gateway\",\n  \"eventType\": \"view\",\n  \"payloadJson\": null\n}"
+            },
+            "url": "{{baseUrl}}/api/metrics/interaction"
+          },
+          "response": []
+        },
+        {
+          "name": "05 — Host stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/host/stats"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "F5 / F7 / F8 — No API (reference)",
+      "description": "Pipeline, Automation, and Docs vault use static files in Portfolio.Web/public/. No requests to add here until a real backend endpoint is introduced.",
+      "item": []
+    }
+  ]
+}

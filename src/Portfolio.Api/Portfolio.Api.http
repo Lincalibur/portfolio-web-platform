@@ -1,0 +1,67 @@
+# Group requests by FEATURE from Docs/implementationPlan.md
+# Only run sections for features you have shipped.
+# Do NOT use bulk /api/mock routes — use real API + frontend fixtures instead.
+
+@host = https://localhost:7262
+
+###############################################################################
+# F0 / F1 — Baseline & health
+###############################################################################
+
+# @name health
+GET {{host}}/health
+Accept: application/json
+
+###
+GET {{host}}/
+Accept: application/json
+
+###############################################################################
+# F2 — Gateway (auth)
+###############################################################################
+
+### Request access — OTP logged to API console when SMTP is empty
+POST {{host}}/api/auth/request-access
+Content-Type: application/json
+
+{
+  "fullName": "Jane Recruiter",
+  "email": "jane@acme.com",
+  "company": "Acme Corp"
+}
+
+### Verify — replace code with OTP from console
+# @name verify
+POST {{host}}/api/auth/verify
+Content-Type: application/json
+
+{
+  "email": "jane@acme.com",
+  "code": "123456"
+}
+
+###############################################################################
+# F4 — Interaction metrics (requires Features:InteractionMetrics = true)
+###############################################################################
+
+### Log interaction
+POST {{host}}/api/metrics/interaction
+Authorization: Bearer {{verify.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "blockId": "gateway",
+  "eventType": "view",
+  "payloadJson": null
+}
+
+###############################################################################
+# F6 — Host stats (requires Features:HostStats = true)
+###############################################################################
+
+### Host stats
+GET {{host}}/api/host/stats
+Authorization: Bearer {{verify.response.body.accessToken}}
+Accept: application/json
+
+# F5 Pipeline, F7 Automation, F8 Docs — use public/fixtures and public/docs in Portfolio.Web (no API calls)

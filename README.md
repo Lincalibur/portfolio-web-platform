@@ -97,6 +97,9 @@ Use a `.env` file (from `.env.example`) for `Jwt__SigningKey`, `Smtp__*`, and da
 
 ## Project blueprint
 
-Network routing, entity model, container layout, and security controls are documented in the **Solution Design Document**:
-
-[`Docs/solutionDesign.md`](Docs/solutionDesign.md)
+| Document | Purpose |
+| --- | --- |
+| [`Docs/solutionDesign.md`](Docs/solutionDesign.md) | Architecture, security, Docker layout |
+| [`Docs/implementationPlan.md`](Docs/implementationPlan.md) | **Feature-by-feature** build plan (F0–F9), gated endpoints, fixture-based UI testing |
+| [`Docs/Postman/`](Docs/Postman/) | Postman collection + local environment (keep in sync with API changes) |
+| [`src/Portfolio.Api/Portfolio.Api.http`](src/Portfolio.Api/Portfolio.Api.http) | Runnable HTTP samples (Visual Studio / REST Client) |
