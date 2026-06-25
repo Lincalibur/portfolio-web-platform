@@ -1,21 +1,21 @@
 {
   "title": "Script Repository",
-  "description": "Enterprise-grade automation demos — configure inputs and run browser-side simulations with realistic, varied output.",
+  "description": "Run cinematic automation demos — ASCII banners, animated progress, radar scans, rocket launches, and trust-score finales.",
   "scripts": [
     {
       "id": "asset_discovery",
       "filename": "asset_discovery.py",
       "title": "The Reconnaissance Tool",
       "tagline": "Modular passive reconnaissance & asset mapping",
-      "description": "Enter a target domain to simulate CT log enumeration, parallel host probing, and JSON footprint export. Each run discovers a different asset set with live latency readings.",
+      "description": "Enter a target domain and watch a radar scan map your digital footprint with animated progress and a live results tree.",
       "highlights": [
-        "Structured JSON logging",
-        "API rate-limiting handling",
-        "Concurrent network requests"
+        "ASCII radar scan",
+        "Animated progress bar",
+        "Live endpoint tree"
       ],
       "language": "python",
       "sourcePath": "/fixtures/scripts/asset_discovery.py",
-      "delayMs": 280,
+      "delayMs": 120,
       "inputs": [
         {
           "id": "target",
@@ -30,16 +30,16 @@
       "id": "deploy_env",
       "filename": "deploy_env.sh",
       "title": "The DevOps Framework",
-      "tagline": "Environmental configuration automation",
-      "description": "Pick an environment to simulate Docker network provisioning, image pulls, and health-check retries. Service count and tags change per environment.",
+      "tagline": "Launch sequence automation",
+      "description": "Pick an environment and follow a staged launch — progress bars for each phase, then a rocket lift-off finale when everything is healthy.",
       "highlights": [
-        "Linux system automation",
-        "Environmental isolation",
-        "Defensive script design (set -euo pipefail)"
+        "Multi-phase progress UI",
+        "Rocket ASCII animation",
+        "Launch complete finale"
       ],
       "language": "bash",
       "sourcePath": "/fixtures/scripts/deploy_env.sh",
-      "delayMs": 320,
+      "delayMs": 110,
       "inputs": [
         {
           "id": "environment",
@@ -58,16 +58,16 @@
       "id": "compliance_check",
       "filename": "compliance_check.yml",
       "title": "The Risk & Compliance Audit",
-      "tagline": "Automated system hardening baseline",
-      "description": "Choose an inventory group and compliance baseline. Runs simulate Ansible task output — including occasional permission findings under stricter baselines.",
+      "tagline": "Trust & safety scorecard",
+      "description": "Run a visual compliance audit with checklist trees and a framed trust score — stricter baselines can surface review warnings.",
       "highlights": [
-        "Infrastructure-as-Code (IaC)",
-        "Compliance baseline verification",
-        "Security posture scanning"
+        "npm-style success tree",
+        "Trust score panel",
+        "Sparkle finale on pass"
       ],
       "language": "yaml",
       "sourcePath": "/fixtures/scripts/compliance_check.yml",
-      "delayMs": 350,
+      "delayMs": 130,
       "inputs": [
         {
           "id": "inventory",

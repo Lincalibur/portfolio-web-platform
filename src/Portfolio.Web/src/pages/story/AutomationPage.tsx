@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { runAutomationSequence } from './automationRunner';
 import {
   buildCommand,
-  generateScriptOutput,
   getDefaultParams,
   type ScriptInputDefinition,
   type TerminalLine,
@@ -29,15 +29,43 @@ interface AutomationScriptsData {
   scripts: AutomationScriptEntry[];
 }
 
+function MatrixBackdrop() {
+  const columns = Array.from({ length: 18 }, (_, index) => ({
+    id: index,
+    delay: `${(index * 0.35).toFixed(2)}s`,
+    duration: `${(2.8 + (index % 5) * 0.4).toFixed(2)}s`,
+    left: `${(index * 5.5 + 1).toFixed(1)}%`,
+  }));
+
+  return (
+    <div className="terminal__matrix" aria-hidden="true">
+      {columns.map((column) => (
+        <span
+          key={column.id}
+          className="terminal__matrix-column"
+          style={{
+            left: column.left,
+            animationDelay: column.delay,
+            animationDuration: column.duration,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function AutomationPage() {
   const [data, setData] = useState<AutomationScriptsData | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [sourceCode, setSourceCode] = useState('');
   const [params, setParams] = useState<Record<string, string>>({});
   const [visibleLines, setVisibleLines] = useState<TerminalLine[]>([]);
+  const [spinnerLine, setSpinnerLine] = useState<string | null>(null);
+  const [finaleState, setFinaleState] = useState<'success' | 'failure' | null>(null);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const runIdRef = useRef(0);
 
   const activeScript = data?.scripts.find((script) => script.id === activeId) ?? null;
   const runCommand = activeScript ? buildCommand(activeScript.id, params) : '';
@@ -66,6 +94,8 @@ export function AutomationPage() {
 
     setParams(getDefaultParams(activeScript.inputs));
     setVisibleLines([]);
+    setSpinnerLine(null);
+    setFinaleState(null);
 
     fetch(activeScript.sourcePath)
       .then((res) => {
@@ -87,7 +117,7 @@ export function AutomationPage() {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [visibleLines]);
+  }, [visibleLines, spinnerLine]);
 
   function updateParam(id: string, value: string) {
     setParams((prev) => ({ ...prev, [id]: value }));
@@ -98,11 +128,13 @@ export function AutomationPage() {
       return;
     }
 
-    const command = buildCommand(activeScript.id, params);
-    const outputLines = generateScriptOutput(activeScript.id, params);
-
+    const runId = runIdRef.current + 1;
+    runIdRef.current = runId;
     setRunning(true);
-    setVisibleLines([{ text: `$ ${command}`, tone: 'info' }]);
+    setVisibleLines([]);
+    setSpinnerLine(null);
+    setFinaleState(null);
+
     void logInteraction(
       'automation',
       'run_script',
@@ -110,16 +142,29 @@ export function AutomationPage() {
       getToken(),
     );
 
-    for (const line of outputLines) {
-      await new Promise((resolve) => window.setTimeout(resolve, activeScript.delayMs));
-      setVisibleLines((prev) => [...prev, line]);
-    }
+    await runAutomationSequence({
+      scriptId: activeScript.id,
+      params,
+      command: buildCommand(activeScript.id, params),
+      baseDelayMs: activeScript.delayMs,
+      onLinesChange: setVisibleLines,
+      onSpinnerChange: setSpinnerLine,
+      onFinaleChange: setFinaleState,
+      isCancelled: () => runIdRef.current !== runId,
+    });
 
-    setRunning(false);
+    if (runIdRef.current === runId) {
+      setRunning(false);
+      setSpinnerLine(null);
+    }
   }
 
   function resetTerminal() {
+    runIdRef.current += 1;
     setVisibleLines([]);
+    setSpinnerLine(null);
+    setFinaleState(null);
+    setRunning(false);
   }
 
   if (error) {
@@ -129,6 +174,15 @@ export function AutomationPage() {
   if (!data || !activeScript) {
     return <p className="loading-text">Loading automation hub…</p>;
   }
+
+  const terminalClassName = [
+    'terminal',
+    running ? 'terminal--running' : '',
+    finaleState === 'success' ? 'terminal--finale-success' : '',
+    finaleState === 'failure' ? 'terminal--finale-failure' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className="automation-page">
@@ -236,7 +290,7 @@ export function AutomationPage() {
               type="button"
               className="btn btn-secondary"
               onClick={resetTerminal}
-              disabled={running || visibleLines.length === 0}
+              disabled={running && visibleLines.length === 0}
             >
               Clear output
             </button>
@@ -246,29 +300,46 @@ export function AutomationPage() {
         <section className="automation-panel card">
           <div className="automation-panel__header">
             <h3>Output</h3>
-            <span className="automation-panel__hint">Simulated terminal</span>
+            <span className="automation-panel__hint">Live console show</span>
           </div>
 
-          <div className="terminal" ref={terminalRef} role="log" aria-live="polite">
-            {visibleLines.length === 0 ? (
-              <p className="terminal__placeholder">
-                Configure parameters above, then run the script. Output varies per target, environment, and baseline.
-              </p>
-            ) : (
-              visibleLines.map((line, index) => (
-                <div
-                  key={`${index}-${line.text}`}
-                  className={`terminal__line terminal__line--${line.tone ?? 'default'}`}
-                >
-                  {line.text || '\u00A0'}
+          <div className={terminalClassName} ref={terminalRef} role="log" aria-live="polite">
+            {running && <MatrixBackdrop />}
+
+            <div className="terminal__content">
+              {visibleLines.length === 0 && !spinnerLine ? (
+                <p className="terminal__placeholder">
+                  Hit Run script for ASCII banners, animated progress bars, radar scans, rocket launch, and trust score finales.
+                </p>
+              ) : (
+                visibleLines.map((line, index) => (
+                  <div
+                    key={`${line.id ?? 'line'}-${index}`}
+                    className={[
+                      'terminal__line',
+                      `terminal__line--${line.tone ?? 'default'}`,
+                      line.meta ? `terminal__line--${line.meta}` : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                  >
+                    {line.text || '\u00A0'}
+                  </div>
+                ))
+              )}
+
+              {spinnerLine && (
+                <div className="terminal__line terminal__line--info terminal__line--spinner">
+                  {spinnerLine}
                 </div>
-              ))
-            )}
-            {running && (
-              <span className="terminal__cursor" aria-hidden="true">
-                ▊
-              </span>
-            )}
+              )}
+
+              {running && !spinnerLine && (
+                <span className="terminal__cursor" aria-hidden="true">
+                  ▊
+                </span>
+              )}
+            </div>
           </div>
         </section>
       </div>
