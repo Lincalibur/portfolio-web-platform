@@ -357,7 +357,8 @@ Invoke-RestMethod "$base/api/host/stats" -Headers @{ Authorization = "Bearer $to
 | --- | --- | --- |
 | `Features:HostStats` | F6 | `true` |
 | `Features:InteractionMetrics` | F4 | `true` |
-| `VITE_API_BASE_URL` | F1 | `https://localhost:7262` |
+| `VITE_API_BASE_URL` | F1 | empty in dev (use proxy); production API origin |
+| `VITE_API_PROXY_TARGET` | F1 | `http://localhost:5180` (Vite dev proxy only) |
 | `Cors:AllowedOrigins` | F1 | `http://localhost:5173` |
 | `Jwt:SigningKey` | F2 | user-secrets (≥32 chars) |
 

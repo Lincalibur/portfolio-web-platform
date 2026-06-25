@@ -86,7 +86,10 @@ npm run dev
 * Dev server: **http://localhost:5173**
 * Landing: `/` (calls `GET /health`)
 * Gateway: `/gateway` → OTP verify → JWT → `/story/*`
-* Configure API URL in `src/Portfolio.Web/.env.development` (`VITE_API_BASE_URL=https://localhost:7262`)
+
+**Local API connection:** In development, leave `VITE_API_BASE_URL` empty in `.env.development`. Vite proxies `/health` and `/api` to `http://localhost:5180` so the browser is not blocked by the API’s self-signed HTTPS certificate. Start the API with the **https** launch profile (`dotnet run` — default), which listens on both `https://localhost:7262` and `http://localhost:5180`.
+
+If the health check still fails, confirm the API is running and that `VITE_API_PROXY_TARGET` matches the API HTTP URL.
 
 Optional flags in `.env.development`:
 

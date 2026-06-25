@@ -22,7 +22,7 @@ export function LandingPage() {
       .catch(() => {
         if (cancelled) return;
         setHealthState('error');
-        setHealthMessage('Unable to reach the API. Start Portfolio.Api and check VITE_API_BASE_URL.');
+        setHealthMessage('Unable to reach the API. Start Portfolio.Api (`dotnet run` in src/Portfolio.Api), then restart the Vite dev server.');
       });
 
     return () => {
