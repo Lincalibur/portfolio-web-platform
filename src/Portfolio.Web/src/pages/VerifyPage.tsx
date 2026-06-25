@@ -11,23 +11,25 @@ import './VerifyPage.css';
 
 export function VerifyPage() {
   const navigate = useNavigate();
-  const pendingEmail = getPendingEmail();
-  const [email] = useState(pendingEmail ?? '');
+  const [email] = useState(() => getPendingEmail() ?? '');
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!pendingEmail) {
+    if (!email) {
       navigate('/gateway', { replace: true });
     }
-  }, [pendingEmail, navigate]);
+  }, [email, navigate]);
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
+  async function submitVerification(verificationCode: string) {
+    if (submitting) {
+      return;
+    }
+
     setError(null);
 
-    if (!email.trim() || !code.trim()) {
+    if (!email.trim() || !verificationCode.trim()) {
       setError('Email and verification code are required.');
       return;
     }
@@ -37,15 +39,16 @@ export function VerifyPage() {
     try {
       const result = await verifyOtp({
         email: email.trim().toLowerCase(),
-        code: code.trim(),
+        code: verificationCode.trim(),
       });
 
       setSession({
         accessToken: result.accessToken,
         expiresAt: result.expiresAt,
       });
+
+      void logInteraction('gateway', 'verify_success', null, result.accessToken);
       clearPendingEmail();
-      await logInteraction('gateway', 'verify_success', null, result.accessToken);
       navigate('/story', { replace: true });
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
@@ -53,8 +56,21 @@ export function VerifyPage() {
       } else {
         setError('Verification failed. Please try again.');
       }
-    } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    await submitVerification(code);
+  }
+
+  function handleCodeChange(nextCode: string) {
+    const normalized = nextCode.replace(/\D/g, '').slice(0, 6);
+    setCode(normalized);
+
+    if (normalized.length === 6) {
+      void submitVerification(normalized);
     }
   }
 
@@ -85,7 +101,7 @@ export function VerifyPage() {
                 id="code"
                 className="form-input verify-code-input"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onChange={(e) => handleCodeChange(e.target.value)}
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 maxLength={6}
