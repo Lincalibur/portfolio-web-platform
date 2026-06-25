@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import {
+  buildCommand,
+  generateScriptOutput,
+  getDefaultParams,
+  type ScriptInputDefinition,
+  type TerminalLine,
+} from './automationSimulators';
 import './AutomationPage.css';
-
-type LineTone = 'default' | 'info' | 'success' | 'warn' | 'error';
-
-interface TerminalLine {
-  text: string;
-  tone?: LineTone;
-}
 
 interface AutomationScriptEntry {
   id: string;
@@ -19,9 +19,8 @@ interface AutomationScriptEntry {
   highlights: string[];
   language: string;
   sourcePath: string;
-  command: string;
   delayMs: number;
-  lines: TerminalLine[];
+  inputs: ScriptInputDefinition[];
 }
 
 interface AutomationScriptsData {
@@ -34,12 +33,14 @@ export function AutomationPage() {
   const [data, setData] = useState<AutomationScriptsData | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [sourceCode, setSourceCode] = useState('');
+  const [params, setParams] = useState<Record<string, string>>({});
   const [visibleLines, setVisibleLines] = useState<TerminalLine[]>([]);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
   const activeScript = data?.scripts.find((script) => script.id === activeId) ?? null;
+  const runCommand = activeScript ? buildCommand(activeScript.id, params) : '';
 
   useEffect(() => {
     fetch('/fixtures/automation-scripts.json')
@@ -59,8 +60,12 @@ export function AutomationPage() {
   useEffect(() => {
     if (!activeScript) {
       setSourceCode('');
+      setParams({});
       return;
     }
+
+    setParams(getDefaultParams(activeScript.inputs));
+    setVisibleLines([]);
 
     fetch(activeScript.sourcePath)
       .then((res) => {
@@ -70,7 +75,6 @@ export function AutomationPage() {
       .then(setSourceCode)
       .catch(() => setSourceCode('// Source unavailable'));
 
-    setVisibleLines([]);
     void logInteraction(
       'automation',
       'select_script',
@@ -85,21 +89,28 @@ export function AutomationPage() {
     }
   }, [visibleLines]);
 
+  function updateParam(id: string, value: string) {
+    setParams((prev) => ({ ...prev, [id]: value }));
+  }
+
   async function runScript() {
     if (!activeScript || running) {
       return;
     }
 
+    const command = buildCommand(activeScript.id, params);
+    const outputLines = generateScriptOutput(activeScript.id, params);
+
     setRunning(true);
-    setVisibleLines([{ text: `$ ${activeScript.command}`, tone: 'info' }]);
+    setVisibleLines([{ text: `$ ${command}`, tone: 'info' }]);
     void logInteraction(
       'automation',
       'run_script',
-      JSON.stringify({ scriptId: activeScript.id }),
+      JSON.stringify({ scriptId: activeScript.id, params }),
       getToken(),
     );
 
-    for (const line of activeScript.lines) {
+    for (const line of outputLines) {
       await new Promise((resolve) => window.setTimeout(resolve, activeScript.delayMs));
       setVisibleLines((prev) => [...prev, line]);
     }
@@ -160,8 +171,8 @@ export function AutomationPage() {
         </ul>
       </div>
 
-      <div className="automation-workspace">
-        <section className="automation-code card">
+      <div className="automation-stack">
+        <section className="automation-panel card">
           <div className="automation-panel__header">
             <h3>Source</h3>
             <code>{activeScript.filename}</code>
@@ -171,7 +182,47 @@ export function AutomationPage() {
           </pre>
         </section>
 
-        <section className="automation-terminal-wrap">
+        <section className="automation-panel card">
+          <div className="automation-panel__header">
+            <h3>Run parameters</h3>
+            <code>{runCommand}</code>
+          </div>
+
+          <div className="automation-params">
+            {activeScript.inputs.map((input) => (
+              <div key={input.id} className="form-group automation-param">
+                <label className="form-label" htmlFor={`param-${input.id}`}>
+                  {input.label}
+                </label>
+                {input.type === 'select' ? (
+                  <select
+                    id={`param-${input.id}`}
+                    className="form-input"
+                    value={params[input.id] ?? input.default}
+                    onChange={(e) => updateParam(input.id, e.target.value)}
+                    disabled={running}
+                  >
+                    {input.options?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    id={`param-${input.id}`}
+                    className="form-input"
+                    type="text"
+                    value={params[input.id] ?? input.default}
+                    placeholder={input.placeholder}
+                    onChange={(e) => updateParam(input.id, e.target.value)}
+                    disabled={running}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
           <div className="automation-controls">
             <button
               type="button"
@@ -187,13 +238,22 @@ export function AutomationPage() {
               onClick={resetTerminal}
               disabled={running || visibleLines.length === 0}
             >
-              Clear
+              Clear output
             </button>
           </div>
+        </section>
 
-          <div className="terminal card" ref={terminalRef} role="log" aria-live="polite">
+        <section className="automation-panel card">
+          <div className="automation-panel__header">
+            <h3>Output</h3>
+            <span className="automation-panel__hint">Simulated terminal</span>
+          </div>
+
+          <div className="terminal" ref={terminalRef} role="log" aria-live="polite">
             {visibleLines.length === 0 ? (
-              <p className="terminal__placeholder">Press Run script to simulate output.</p>
+              <p className="terminal__placeholder">
+                Configure parameters above, then run the script. Output varies per target, environment, and baseline.
+              </p>
             ) : (
               visibleLines.map((line, index) => (
                 <div

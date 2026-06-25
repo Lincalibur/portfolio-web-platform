@@ -1,13 +1,13 @@
 {
   "title": "Script Repository",
-  "description": "Enterprise-grade automation demos — reconnaissance, deployment orchestration, and compliance auditing.",
+  "description": "Enterprise-grade automation demos — configure inputs and run browser-side simulations with realistic, varied output.",
   "scripts": [
     {
       "id": "asset_discovery",
       "filename": "asset_discovery.py",
       "title": "The Reconnaissance Tool",
       "tagline": "Modular passive reconnaissance & asset mapping",
-      "description": "Accepts a target domain, queries public asset registries, tests host availability, and outputs a clean infrastructure footprint map as JSON.",
+      "description": "Enter a target domain to simulate CT log enumeration, parallel host probing, and JSON footprint export. Each run discovers a different asset set with live latency readings.",
       "highlights": [
         "Structured JSON logging",
         "API rate-limiting handling",
@@ -15,23 +15,15 @@
       ],
       "language": "python",
       "sourcePath": "/fixtures/scripts/asset_discovery.py",
-      "command": "python asset_discovery.py",
-      "delayMs": 350,
-      "lines": [
-        { "text": "2026-06-25 14:00:01 [INFO] Initiating OSINT subdomain enumeration for: portfolio.local", "tone": "info" },
-        { "text": "2026-06-25 14:00:01 [INFO] Querying public certificate transparency logs...", "tone": "info" },
-        { "text": "2026-06-25 14:00:02 [INFO] Discovered 3 assets. Initializing parallel health verification pipeline.", "tone": "info" },
-        { "text": "2026-06-25 14:00:02 [INFO] Probing network boundary for api.portfolio.local...", "tone": "info" },
-        { "text": "2026-06-25 14:00:02 [INFO] Probing network boundary for vault.portfolio.local...", "tone": "info" },
-        { "text": "2026-06-25 14:00:02 [INFO] Probing network boundary for auth.portfolio.local...", "tone": "info" },
-        { "text": "{", "tone": "default" },
-        { "text": "  \"target\": \"portfolio.local\",", "tone": "default" },
-        { "text": "  \"infrastructure_map\": [", "tone": "default" },
-        { "text": "    {\"host\": \"api.portfolio.local\", \"type\": \"backend_gateway\", \"status\": \"ACTIVE\", \"latency_ms\": 12},", "tone": "default" },
-        { "text": "    {\"host\": \"vault.portfolio.local\", \"type\": \"storage_node\", \"status\": \"ACTIVE\", \"latency_ms\": 12},", "tone": "default" },
-        { "text": "    {\"host\": \"auth.portfolio.local\", \"type\": \"identity_provider\", \"status\": \"ACTIVE\", \"latency_ms\": 12}", "tone": "default" },
-        { "text": "  ]", "tone": "default" },
-        { "text": "}", "tone": "default" }
+      "delayMs": 280,
+      "inputs": [
+        {
+          "id": "target",
+          "label": "Target domain",
+          "type": "text",
+          "default": "portfolio.local",
+          "placeholder": "example.com"
+        }
       ]
     },
     {
@@ -39,7 +31,7 @@
       "filename": "deploy_env.sh",
       "title": "The DevOps Framework",
       "tagline": "Environmental configuration automation",
-      "description": "Automates prerequisite checks, network boundary creation, container provisioning, and post-deployment health verification loops.",
+      "description": "Pick an environment to simulate Docker network provisioning, image pulls, and health-check retries. Service count and tags change per environment.",
       "highlights": [
         "Linux system automation",
         "Environmental isolation",
@@ -47,25 +39,19 @@
       ],
       "language": "bash",
       "sourcePath": "/fixtures/scripts/deploy_env.sh",
-      "command": "./deploy_env.sh staging",
-      "delayMs": 450,
-      "lines": [
-        { "text": "[*] Initializing automated orchestration for environment: STAGING", "tone": "info" },
-        { "text": "[->] Phase 1: Validating local environment capabilities...", "tone": "warn" },
-        { "text": "[+] System dependencies verified.", "tone": "success" },
-        { "text": "[->] Phase 2: Creating secure network isolation boundaries...", "tone": "warn" },
-        { "text": "Creating bridge network: ecosystem_staging_nw...", "tone": "default" },
-        { "text": "[+] Network isolation layer active.", "tone": "success" },
-        { "text": "[->] Phase 3: Provisioning isolated app container layers...", "tone": "warn" },
-        { "text": "Spinning up Gateway Keeper Container (Image: gateway-service:latest)... OK", "tone": "default" },
-        { "text": "Spinning up Docs Vault Node (Image: vault-service:latest)... OK", "tone": "default" },
-        { "text": "[->] Phase 4: Executing post-deployment health integration loop...", "tone": "warn" },
-        { "text": "Probing gateway health endpoint (Attempt 1/3)...", "tone": "default" },
-        { "text": "Probing gateway health endpoint (Attempt 2/3)...", "tone": "default" },
-        { "text": "[SUCCESS] Cluster synchronization complete. Application reporting HEALTHY.", "tone": "success" },
-        { "text": "===================================================", "tone": "success" },
-        { "text": "[✓] Infrastructure environment configured and deployed.", "tone": "success" },
-        { "text": "===================================================", "tone": "success" }
+      "delayMs": 320,
+      "inputs": [
+        {
+          "id": "environment",
+          "label": "Environment",
+          "type": "select",
+          "default": "staging",
+          "options": [
+            { "value": "dev", "label": "Development" },
+            { "value": "staging", "label": "Staging" },
+            { "value": "production", "label": "Production" }
+          ]
+        }
       ]
     },
     {
@@ -73,7 +59,7 @@
       "filename": "compliance_check.yml",
       "title": "The Risk & Compliance Audit",
       "tagline": "Automated system hardening baseline",
-      "description": "Validates firewall state, file permission masks, and scans configuration trees for exposed JWT or credential patterns.",
+      "description": "Choose an inventory group and compliance baseline. Runs simulate Ansible task output — including occasional permission findings under stricter baselines.",
       "highlights": [
         "Infrastructure-as-Code (IaC)",
         "Compliance baseline verification",
@@ -81,28 +67,30 @@
       ],
       "language": "yaml",
       "sourcePath": "/fixtures/scripts/compliance_check.yml",
-      "command": "ansible-playbook compliance_check.yml",
-      "delayMs": 500,
-      "lines": [
-        { "text": "PLAY [Automated Infrastructure Hardening and Compliance Audit] ***************", "tone": "info" },
-        { "text": "", "tone": "default" },
-        { "text": "TASK [Risk Management: Verify system firewall installation baseline] *********", "tone": "warn" },
-        { "text": "ok: [application_servers]", "tone": "success" },
-        { "text": "", "tone": "default" },
-        { "text": "TASK [Audit: Evaluate Firewall Ingress/Egress state] **************************", "tone": "warn" },
-        { "text": "changed: [application_servers]", "tone": "success" },
-        { "text": "", "tone": "default" },
-        { "text": "TASK [Security Hardening: Ensure system file permissions mask is restrictive] *", "tone": "warn" },
-        { "text": "ok: [application_servers]", "tone": "success" },
-        { "text": "", "tone": "default" },
-        { "text": "TASK [Credential Hygiene: Scan configuration directories for plaintext JWT keys or secrets] ***", "tone": "warn" },
-        { "text": "ok: [application_servers]", "tone": "success" },
-        { "text": "", "tone": "default" },
-        { "text": "TASK [Compliance Guardrail: Assert no secrets are committed to system configuration paths] ***", "tone": "warn" },
-        { "text": "ok: [application_servers] => {\"msg\": \"COMPLIANCE PASSED: High-risk secret patterns absent from target paths.\"}", "tone": "success" },
-        { "text": "", "tone": "default" },
-        { "text": "PLAY RECAP *********************************************************************", "tone": "info" },
-        { "text": "application_servers : ok=5 changed=1 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0", "tone": "success" }
+      "delayMs": 350,
+      "inputs": [
+        {
+          "id": "inventory",
+          "label": "Inventory group",
+          "type": "select",
+          "default": "application_servers",
+          "options": [
+            { "value": "application_servers", "label": "Application servers" },
+            { "value": "edge_nodes", "label": "Edge nodes" },
+            { "value": "data_plane", "label": "Data plane" }
+          ]
+        },
+        {
+          "id": "baseline",
+          "label": "Compliance baseline",
+          "type": "select",
+          "default": "cis_level1",
+          "options": [
+            { "value": "cis_level1", "label": "CIS Level 1" },
+            { "value": "pci_dss", "label": "PCI-DSS" },
+            { "value": "custom_hard", "label": "Custom hardening" }
+          ]
+        }
       ]
     }
   ]
