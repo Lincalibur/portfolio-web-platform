@@ -45,7 +45,7 @@ The API lives in [`src/Portfolio.Api/`](src/Portfolio.Api/). Open `PortfolioWebP
 ### Prerequisites
 
 * [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet)
-* [Node.js 20+](https://nodejs.org/) (for the SPA — coming in `src/Portfolio.Web`)
+* [Node.js 20+](https://nodejs.org/) (for the SPA in `src/Portfolio.Web`)
 
 ### Run API
 
@@ -75,13 +75,27 @@ dotnet user-secrets set "Jwt:SigningKey" "your-production-grade-secret-at-least-
 dotnet user-secrets set "Smtp:Host" "smtp.example.com"
 ```
 
-### Run frontend (once scaffold exists)
+### Run frontend
 
 ```powershell
 cd src/Portfolio.Web
-npm ci
+npm install
 npm run dev
 ```
+
+* Dev server: **http://localhost:5173**
+* Landing: `/` (calls `GET /health`)
+* Gateway: `/gateway` → OTP verify → JWT → `/story/*`
+* Configure API URL in `src/Portfolio.Web/.env.development` (`VITE_API_BASE_URL=https://localhost:7262`)
+
+Optional flags in `.env.development`:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `VITE_ENABLE_INTERACTION_METRICS` | `false` | POST to `/api/metrics/interaction` when `Features:InteractionMetrics` is on |
+| `VITE_USE_HOST_STATS_API` | `false` | Use live `GET /api/host/stats` instead of `public/fixtures/host-stats.json` |
+
+Run both API and SPA together for the full auth flow. In Development, OTP codes appear in the API console when SMTP is not configured.
 
 ---
 

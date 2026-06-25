@@ -1,0 +1,10 @@
+{
+  "cpuPercent": 23.4,
+  "memoryUsedMb": 512,
+  "memoryTotalMb": 8192,
+  "containerStatuses": [
+    "web: running (healthy)",
+    "api: running (healthy)",
+    "tunnel: running (connected)"
+  ]
+}

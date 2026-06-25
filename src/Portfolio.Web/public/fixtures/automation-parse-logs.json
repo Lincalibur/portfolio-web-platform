@@ -1,0 +1,18 @@
+{
+  "title": "Log Parser Automation",
+  "description": "Demonstrates parsing application logs for error patterns — runs entirely in the browser from a static fixture.",
+  "command": "python parse_logs.py --input app.log --pattern ERROR",
+  "delayMs": 400,
+  "lines": [
+    "Reading app.log (1,247 lines)...",
+    "Scanning for pattern: ERROR",
+    "",
+    "Found 3 matches:",
+    "  [2026-06-25 14:32:01] ERROR SMTP connection timeout",
+    "  [2026-06-25 15:01:44] ERROR Rate limit exceeded for 192.168.1.42",
+    "  [2026-06-25 16:18:09] ERROR JWT validation failed: token expired",
+    "",
+    "Summary written to errors_summary.txt",
+    "Done in 0.42s"
+  ]
+}
