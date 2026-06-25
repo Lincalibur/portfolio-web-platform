@@ -207,7 +207,7 @@ F0 ──► F1 ──► F2 ──► F3 ──► F4 ──► F5 ──► F6
 
 | Step | Backend | Frontend | Test |
 | --- | --- | --- | --- |
-| F7.1 | **No** `POST /api/automation/run` unless you add a sandboxed, allow-listed executor later | Button plays script from `public/fixtures/automation-parse-logs.json` | Lines animate in UI |
+| F7.1 | **No** `POST /api/automation/run` unless you add a sandboxed, allow-listed executor later | Tabbed script repository from `public/fixtures/automation-scripts.json` + source under `fixtures/scripts/` | Lines animate in UI |
 | F7.2 | — | If F4 done: `logInteraction('automation', 'run_script', …)` | 204 |
 
 **Do not add:** open-ended script execution endpoint (high risk).

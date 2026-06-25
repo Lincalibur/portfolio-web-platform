@@ -1,5 +1,42 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TypingHeadline } from '../../components/profile/TypingHeadline';
 import './StoryHomePage.css';
+
+interface ProfileHighlight {
+  icon: string;
+  label?: string;
+  text: string;
+}
+
+interface ProfileSkill {
+  name: string;
+  icon: string;
+}
+
+interface ProfileSkillGroup {
+  title: string;
+  skills: ProfileSkill[];
+}
+
+interface ProfileSocial {
+  name: string;
+  url: string;
+  iconLight: string;
+  iconDark: string;
+}
+
+interface ProfileData {
+  heroGif: string;
+  waveGif: string;
+  typingLines: string[];
+  quote: string;
+  quoteAuthor: string;
+  bio: string;
+  highlights: ProfileHighlight[];
+  skillGroups: ProfileSkillGroup[];
+  socials: ProfileSocial[];
+}
 
 const blocks = [
   {
@@ -18,7 +55,7 @@ const blocks = [
     to: '/story/automation',
     num: '04',
     title: 'Automation Hub',
-    description: 'Terminal-style demo of log parsing and scripting workflows.',
+    description: 'Script repository — reconnaissance, deployment, and compliance demos.',
   },
   {
     to: '/story/docs',
@@ -29,27 +66,129 @@ const blocks = [
 ];
 
 export function StoryHomePage() {
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/fixtures/profile.json')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to load profile');
+        return res.json() as Promise<ProfileData>;
+      })
+      .then(setProfile)
+      .catch(() => setError('Could not load profile content.'));
+  }, []);
+
+  if (error) {
+    return <div className="alert alert-error">{error}</div>;
+  }
+
+  if (!profile) {
+    return <p className="loading-text">Loading profile…</p>;
+  }
+
   return (
     <div className="story-home">
-      <header className="story-home__header">
-        <span className="badge badge-success">Authenticated</span>
-        <h1>Welcome to the story</h1>
-        <p>
-          You passed the gateway. Each block below demonstrates a different engineering
-          capability — select one from the sidebar or the cards below.
-        </p>
-      </header>
+      <section className="profile-hero card">
+        <img
+          src={profile.heroGif}
+          alt="Profile banner"
+          className="profile-hero__banner"
+        />
 
-      <div className="story-home__grid">
-        {blocks.map((block) => (
-          <Link key={block.to} to={block.to} className="story-home__card card">
-            <span className="story-home__num">{block.num}</span>
-            <h2>{block.title}</h2>
-            <p>{block.description}</p>
-            <span className="story-home__link">Open block →</span>
-          </Link>
+        <div className="profile-hero__wave">
+          <img src={profile.waveGif} alt="" aria-hidden="true" width={40} height={40} />
+        </div>
+
+        <TypingHeadline lines={profile.typingLines} />
+
+        <p className="profile-hero__role">Developer</p>
+
+        <blockquote className="profile-quote">
+          <p>&ldquo;{profile.quote}&rdquo;</p>
+          <footer>— {profile.quoteAuthor}</footer>
+        </blockquote>
+
+        <p className="profile-bio">{profile.bio}</p>
+
+        <ul className="profile-highlights">
+          {profile.highlights.map((item) => (
+            <li key={item.text}>
+              <span aria-hidden="true">{item.icon}</span>
+              {item.label ? (
+                <>
+                  <strong>{item.label}:</strong> {item.text}
+                </>
+              ) : (
+                item.text
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="profile-skills">
+        {profile.skillGroups.map((group) => (
+          <div key={group.title} className="profile-skills__group card">
+            <h2>{group.title}</h2>
+            <div className="profile-skills__icons">
+              {group.skills.map((skill) => (
+                <img
+                  key={skill.name}
+                  src={skill.icon}
+                  alt={skill.name}
+                  title={skill.name}
+                  width={36}
+                  height={36}
+                />
+              ))}
+            </div>
+          </div>
         ))}
-      </div>
+      </section>
+
+      <section className="profile-socials card">
+        <h2>Socials</h2>
+        <div className="profile-socials__links">
+          {profile.socials.map((social) => (
+            <a
+              key={social.name}
+              href={social.url}
+              target="_blank"
+              rel="noreferrer"
+              className="profile-socials__link"
+              aria-label={social.name}
+            >
+              <picture>
+                <source media="(prefers-color-scheme: dark)" srcSet={social.iconDark} />
+                <img src={social.iconLight} alt="" width={32} height={32} />
+              </picture>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="story-home__explore">
+        <header className="story-home__header">
+          <span className="badge badge-success">Authenticated</span>
+          <h2>Explore the story</h2>
+          <p>
+            You passed the gateway. Each block below demonstrates a different engineering
+            capability — select one from the sidebar or the cards below.
+          </p>
+        </header>
+
+        <div className="story-home__grid">
+          {blocks.map((block) => (
+            <Link key={block.to} to={block.to} className="story-home__card card">
+              <span className="story-home__num">{block.num}</span>
+              <h3>{block.title}</h3>
+              <p>{block.description}</p>
+              <span className="story-home__link">Open block →</span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

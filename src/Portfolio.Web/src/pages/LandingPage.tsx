@@ -78,7 +78,7 @@ export function LandingPage() {
             { num: '01', title: 'Gateway', desc: 'Email OTP and JWT gatekeeper' },
             { num: '02', title: 'Pipeline', desc: 'CI/CD graph with YAML snippets' },
             { num: '03', title: 'Orchestration', desc: 'Host and container metrics' },
-            { num: '04', title: 'Automation', desc: 'Terminal-style script demo' },
+            { num: '04', title: 'Automation', desc: 'Script repository — recon, deploy, and compliance' },
             { num: '05', title: 'Docs Vault', desc: 'Architecture and implementation plans' },
           ].map((block) => (
             <article key={block.num} className="landing-block card">
