@@ -57,12 +57,6 @@ const blocks = [
     title: 'Automation Hub',
     description: 'Script repository — reconnaissance, deployment, and compliance demos.',
   },
-  {
-    to: '/story/docs',
-    num: '05',
-    title: 'Documentation Vault',
-    description: 'Solution design, implementation plan, and architecture blueprints.',
-  },
 ];
 
 export function StoryHomePage() {

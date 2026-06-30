@@ -8,7 +8,6 @@ const storyBlocks = [
   { to: '/story/pipeline', label: 'Pipeline', end: false },
   { to: '/story/orchestration', label: 'Orchestration', end: false },
   { to: '/story/automation', label: 'Automation', end: false },
-  { to: '/story/docs', label: 'Docs Vault', end: false },
 ];
 
 export function StoryLayout() {

@@ -7,7 +7,6 @@ import { StoryHomePage } from '../pages/story/StoryHomePage';
 import { PipelinePage } from '../pages/story/PipelinePage';
 import { OrchestrationPage } from '../pages/story/OrchestrationPage';
 import { AutomationPage } from '../pages/story/AutomationPage';
-import { DocsPage } from '../pages/story/DocsPage';
 import { GuestRoute, ProtectedRoute } from './ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -33,7 +32,6 @@ export const router = createBrowserRouter([
           { path: 'pipeline', element: <PipelinePage /> },
           { path: 'orchestration', element: <OrchestrationPage /> },
           { path: 'automation', element: <AutomationPage /> },
-          { path: 'docs', element: <DocsPage /> },
         ],
       },
     ],

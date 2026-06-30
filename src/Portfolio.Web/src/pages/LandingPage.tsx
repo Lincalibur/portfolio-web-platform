@@ -79,7 +79,6 @@ export function LandingPage() {
             { num: '02', title: 'Pipeline', desc: 'CI/CD graph with YAML snippets' },
             { num: '03', title: 'Orchestration', desc: 'Host and container metrics' },
             { num: '04', title: 'Automation', desc: 'Script repository — recon, deploy, and compliance' },
-            { num: '05', title: 'Docs Vault', desc: 'Architecture and implementation plans' },
           ].map((block) => (
             <article key={block.num} className="landing-block card">
               <span className="landing-block__num">{block.num}</span>

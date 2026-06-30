@@ -18,8 +18,7 @@ A self-hosted interactive CV website designed for **low resource use** on a **De
 * **Gateway:** Email capture and token validation UI.
 * **DevOps pipeline:** Interactive CI/CD visualization (YAML from this repo).
 * **System orchestration:** Host/container metrics from a protected API.
-* **Automation hub:** Terminal-style demo of scripting skills.
-* **Documentation vault:** Live view of architecture docs (including the SDD).
+* **Automation hub:** Terminal-style scripting demos with visual console effects.
 
 ---
 
@@ -40,7 +39,9 @@ A self-hosted interactive CV website designed for **low resource use** on a **De
 
 ## Quick setup (local development)
 
-The API lives in [`src/Portfolio.Api/`](src/Portfolio.Api/). Open `PortfolioWebPlatform.sln` in **Visual Studio 2022** or **Rider**, or use the CLI — both work; the repo is already scaffolded to match [`Docs/solutionDesign.md`](Docs/solutionDesign.md).
+See **[`Docs/howToRunGuide.md`](Docs/howToRunGuide.md)** for the full step-by-step guide (prerequisites, two-terminal workflow, OTP flow, env vars, and troubleshooting).
+
+The API lives in [`src/Portfolio.Api/`](src/Portfolio.Api/). Open `PortfolioWebPlatform.slnx` in **Visual Studio 2022** or **Rider**, or use the CLI.
 
 ### Prerequisites
 
@@ -116,6 +117,7 @@ Use a `.env` file (from `.env.example`) for `Jwt__SigningKey`, `Smtp__*`, and da
 
 | Document | Purpose |
 | --- | --- |
+| [`Docs/howToRunGuide.md`](Docs/howToRunGuide.md) | **Local setup** — prerequisites, run API + SPA, auth flow, troubleshooting |
 | [`Docs/solutionDesign.md`](Docs/solutionDesign.md) | Architecture, security, Docker layout |
 | [`Docs/implementationPlan.md`](Docs/implementationPlan.md) | **Feature-by-feature** build plan (F0–F9), gated endpoints, fixture-based UI testing |
 | [`Docs/Postman/`](Docs/Postman/) | Postman collection + local environment (keep in sync with API changes) |

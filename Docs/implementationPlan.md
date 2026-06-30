@@ -39,7 +39,7 @@ Complements [`solutionDesign.md`](solutionDesign.md).
 | `GET /api/host/stats` | Implemented, placeholder | **Gate behind `Features:HostStats`** until F6 |
 | `POST /api/metrics/interaction` | Implemented | **Gate behind `Features:InteractionMetrics`** until F4 |
 | Bulk `/api/mock/*` | Not implemented | **Do not implement** (use fixtures instead) |
-| Frontend | F1–F8 implemented (`src/Portfolio.Web`) | F9 Docker/nginx deploy |
+| Frontend | F1–F7 implemented (`src/Portfolio.Web`) | F8 docs vault (deferred — repo `Docs/` only); F9 Docker/nginx deploy |
 
 ---
 
@@ -387,6 +387,7 @@ One PR = one feature = one slice of API surface.
 
 ## 11. Related documents
 
+* [`howToRunGuide.md`](howToRunGuide.md) — local setup, auth flow, troubleshooting
 * [`solutionDesign.md`](solutionDesign.md) — architecture
 * [`README.md`](../README.md) — run instructions
 * [`Docs/Postman/`](Postman/) — Postman collection (primary manual QA)
