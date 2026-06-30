@@ -48,8 +48,8 @@ const blocks = [
   {
     to: '/story/orchestration',
     num: '03',
-    title: 'System Orchestration',
-    description: 'Live host metrics — CPU, memory, and container health on the edge.',
+    title: 'API Gateway & Security',
+    description: 'Interactive gateway circuit with live attack simulation and security event log.',
   },
   {
     to: '/story/automation',

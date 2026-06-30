@@ -3,17 +3,17 @@
   "waveGif": "https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif",
   "typingLines": [
     "Hi! I'm Liam Olivier.",
-    "Full-Stack Developer",
-    "Passionate about Tech & Creativity!"
+    "Bachelor of Computing",
+    "Fintech · C# · API Security"
   ],
   "quote": "Intelligence without ambition is a bird without wings.",
   "quoteAuthor": "Salvador Dalí",
-  "bio": "I'm Liam Olivier, a passionate software developer with a love for technology and creativity. I strive to combine intelligence with ambition to soar to new heights in my personal and professional endeavors.",
+  "bio": "I'm Liam Olivier, a software developer with a Bachelor of Computing, focused on Fintech solutions in C# and building API security tooling. I combine strong engineering fundamentals with hands-on DevOps and security practice.",
   "highlights": [
+    { "icon": "🎓", "label": "Education", "text": "Bachelor of Computing — recently completed." },
+    { "icon": "💳", "label": "Focus", "text": "Fintech development with C# and enterprise APIs." },
+    { "icon": "🛡️", "label": "Security", "text": "API hardening tools — rate limiting, token validation, payload filtering." },
     { "icon": "🌍", "text": "Based in Western Cape, South Africa." },
-    { "icon": "🛡️", "label": "Current Focus", "text": "Developing OpenClaw-Assistant (Cybersecurity AI) and managing my local homelab." },
-    { "icon": "⚙️", "label": "Homelab", "text": "Currently running Docker and Rancher on a dedicated local server." },
-    { "icon": "🧠", "label": "Learning", "text": "Advanced Signal Intelligence and Bio-Medical API integrations." },
     { "icon": "🤝", "label": "Open for", "text": "Collaborations on Open Source security tools or DevOps automation." }
   ],
   "skillGroups": [

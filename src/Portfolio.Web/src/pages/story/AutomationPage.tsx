@@ -228,16 +228,6 @@ export function AutomationPage() {
       <div className="automation-stack">
         <section className="automation-panel card">
           <div className="automation-panel__header">
-            <h3>Source</h3>
-            <code>{activeScript.filename}</code>
-          </div>
-          <pre className="automation-code__pre">
-            <code>{sourceCode}</code>
-          </pre>
-        </section>
-
-        <section className="automation-panel card">
-          <div className="automation-panel__header">
             <h3>Run parameters</h3>
             <code>{runCommand}</code>
           </div>
@@ -300,7 +290,7 @@ export function AutomationPage() {
         <section className="automation-panel card">
           <div className="automation-panel__header">
             <h3>Output</h3>
-            <span className="automation-panel__hint">Live console show</span>
+            <span className="automation-panel__hint">Live console show — run first, review code below</span>
           </div>
 
           <div className={terminalClassName} ref={terminalRef} role="log" aria-live="polite">
@@ -309,7 +299,7 @@ export function AutomationPage() {
             <div className="terminal__content">
               {visibleLines.length === 0 && !spinnerLine ? (
                 <p className="terminal__placeholder">
-                  Hit Run script for ASCII banners, animated progress bars, radar scans, rocket launch, and trust score finales.
+                  Hit Run script to see the demo output — ASCII banners, progress bars, rocket launch, and trust scores.
                 </p>
               ) : (
                 visibleLines.map((line, index) => (
@@ -341,6 +331,17 @@ export function AutomationPage() {
               )}
             </div>
           </div>
+        </section>
+
+        <section className="automation-panel card automation-panel--source">
+          <div className="automation-panel__header">
+            <h3>Source code</h3>
+            <code>{activeScript.filename}</code>
+          </div>
+          <p className="automation-source-hint">Optional — review the script after watching the output above.</p>
+          <pre className="automation-code__pre">
+            <code>{sourceCode}</code>
+          </pre>
         </section>
       </div>
     </div>

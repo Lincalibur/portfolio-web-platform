@@ -32,6 +32,24 @@
   margin-bottom: 1.5rem;
 }
 
+.landing-hero__lead strong {
+  color: var(--text-primary);
+}
+
+.landing-credentials {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.landing-credentials li {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
 .landing-hero__actions {
   display: flex;
   flex-wrap: wrap;

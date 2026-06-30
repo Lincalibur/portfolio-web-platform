@@ -137,6 +137,16 @@
   margin-bottom: 0;
 }
 
+.automation-source-hint {
+  margin: -0.35rem 0 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.automation-panel--source .automation-code__pre {
+  max-height: 300px;
+}
+
 .automation-controls {
   display: flex;
   flex-wrap: wrap;

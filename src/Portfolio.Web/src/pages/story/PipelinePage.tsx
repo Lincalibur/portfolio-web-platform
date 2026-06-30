@@ -9,17 +9,14 @@ interface PipelineNode {
   status: 'success' | 'running' | 'pending' | 'failed';
 }
 
-interface PipelineEdge {
-  from: string;
-  to: string;
-}
-
 interface PipelineData {
   title: string;
+  playSequence?: string[];
   nodes: PipelineNode[];
-  edges: PipelineEdge[];
   yamlSnippets: Record<string, string>;
 }
+
+const PLAY_DURATION_MS = 5000;
 
 const statusBadge: Record<PipelineNode['status'], string> = {
   success: 'badge-success',
@@ -28,10 +25,17 @@ const statusBadge: Record<PipelineNode['status'], string> = {
   failed: 'badge-warning',
 };
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
 export function PipelinePage() {
   const [data, setData] = useState<PipelineData | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [activePlayId, setActivePlayId] = useState<string | null>(null);
+  const [completedPlayIds, setCompletedPlayIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch('/fixtures/pipeline.json')
@@ -49,8 +53,31 @@ export function PipelinePage() {
   }, []);
 
   function handleNodeClick(nodeId: string) {
+    if (playing) return;
     setSelectedId(nodeId);
     void logInteraction('pipeline', 'node_click', JSON.stringify({ nodeId }), getToken());
+  }
+
+  async function playPipeline() {
+    if (!data || playing) return;
+
+    const sequence = data.playSequence ?? ['checkout', 'build', 'test'];
+    const stepMs = PLAY_DURATION_MS / sequence.length;
+
+    setPlaying(true);
+    setCompletedPlayIds(new Set());
+    setActivePlayId(null);
+    void logInteraction('pipeline', 'play', JSON.stringify({ sequence }), getToken());
+
+    for (const nodeId of sequence) {
+      setActivePlayId(nodeId);
+      setSelectedId(nodeId);
+      await sleep(stepMs);
+      setCompletedPlayIds((prev) => new Set([...prev, nodeId]));
+    }
+
+    setActivePlayId(null);
+    setPlaying(false);
   }
 
   if (error) {
@@ -69,26 +96,59 @@ export function PipelinePage() {
       <header className="block-header">
         <span className="badge badge-muted">Block 02</span>
         <h1>{data.title}</h1>
-        <p>Click a stage to inspect its CI/CD configuration snippet.</p>
+        <p>Run a simulated build or click a stage to inspect generic CI/CD YAML.</p>
       </header>
 
       <div className="pipeline-layout">
         <div className="pipeline-graph card">
+          <div className="pipeline-graph__toolbar">
+            <h2>Pipeline stages</h2>
+            <button
+              type="button"
+              className="btn btn-primary pipeline-play-btn"
+              onClick={() => void playPipeline()}
+              disabled={playing}
+              aria-label="Play pipeline simulation"
+            >
+              {playing ? '▶ Running…' : '▶ Play'}
+            </button>
+          </div>
+
           <div className="pipeline-nodes">
-            {data.nodes.map((node, index) => (
-              <div key={node.id} className="pipeline-node-wrapper">
-                {index > 0 && <div className="pipeline-connector" aria-hidden="true" />}
-                <button
-                  type="button"
-                  className={`pipeline-node${selectedId === node.id ? ' pipeline-node--selected' : ''}`}
-                  onClick={() => handleNodeClick(node.id)}
-                >
-                  <span className={`badge ${statusBadge[node.status]}`}>{node.status}</span>
-                  <span className="pipeline-node__label">{node.label}</span>
-                  <span className="pipeline-node__id">{node.id}</span>
-                </button>
-              </div>
-            ))}
+            {data.nodes.map((node, index) => {
+              const isActive = activePlayId === node.id;
+              const isCompleted = completedPlayIds.has(node.id);
+
+              return (
+                <div key={node.id} className="pipeline-node-wrapper">
+                  {index > 0 && (
+                    <div
+                      className={`pipeline-connector${isCompleted || isActive ? ' pipeline-connector--live' : ''}`}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <button
+                    type="button"
+                    className={[
+                      'pipeline-node',
+                      selectedId === node.id ? 'pipeline-node--selected' : '',
+                      isActive ? 'pipeline-node--playing' : '',
+                      isCompleted ? 'pipeline-node--completed' : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => handleNodeClick(node.id)}
+                    disabled={playing && !isActive && !isCompleted}
+                  >
+                    <span className={`badge ${isCompleted || isActive ? 'badge-success' : statusBadge[node.status]}`}>
+                      {isActive ? 'running' : isCompleted ? 'success' : node.status}
+                    </span>
+                    <span className="pipeline-node__label">{node.label}</span>
+                    <span className="pipeline-node__id">{node.id}</span>
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
 

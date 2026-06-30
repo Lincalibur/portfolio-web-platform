@@ -1,11 +1,12 @@
 {
   "title": "Deploy pipeline",
+  "playSequence": ["checkout", "build", "test"],
   "nodes": [
     { "id": "checkout", "label": "Checkout", "status": "success" },
     { "id": "build", "label": "dotnet build", "status": "success" },
     { "id": "test", "label": "dotnet test", "status": "success" },
     { "id": "publish", "label": "dotnet publish", "status": "success" },
-    { "id": "docker", "label": "docker build & push", "status": "running" },
+    { "id": "docker", "label": "docker build & push", "status": "pending" },
     { "id": "deploy", "label": "compose up -d", "status": "pending" }
   ],
   "edges": [
@@ -17,10 +18,10 @@
   ],
   "yamlSnippets": {
     "checkout": "steps:\n  - uses: actions/checkout@v4\n    with:\n      fetch-depth: 0",
-    "build": "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: dotnet build -c Release",
-    "test": "jobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - run: dotnet test --no-build -c Release",
-    "publish": "jobs:\n  publish:\n    runs-on: ubuntu-latest\n    steps:\n      - run: dotnet publish -c Release -o ./out",
-    "docker": "jobs:\n  docker:\n    runs-on: ubuntu-latest\n    steps:\n      - run: docker build -t portfolio-api .\n      - run: docker push ghcr.io/org/portfolio-api",
-    "deploy": "jobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - run: docker compose pull\n      - run: docker compose up -d --build"
+    "build": "jobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: dotnet build --configuration Release",
+    "test": "jobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - run: dotnet test --configuration Release --no-build",
+    "publish": "jobs:\n  publish:\n    runs-on: ubuntu-latest\n    steps:\n      - run: dotnet publish --configuration Release --output ./artifacts",
+    "docker": "jobs:\n  containerize:\n    runs-on: ubuntu-latest\n    steps:\n      - run: docker build -t fintech-service:latest .\n      - run: docker push registry.example.com/fintech-service:latest",
+    "deploy": "jobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - run: docker compose pull\n      - run: docker compose up -d"
   }
 }

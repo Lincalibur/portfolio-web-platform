@@ -40,25 +40,32 @@ export function LandingPage() {
 
       <main className="landing-hero container">
         <div className="landing-hero__content">
-          <p className="landing-hero__eyebrow">Full-stack · DevOps · Security</p>
+          <p className="landing-hero__eyebrow">Bachelor of Computing · Fintech (C#) · API Security</p>
           <h1>Interactive Resume Ecosystem</h1>
           <p className="landing-hero__lead">
-            A gated, story-driven portfolio that demonstrates secure access control, CI/CD
-            pipelines, live orchestration, automation, and technical documentation — all in
-            one cohesive experience.
+            Liam Olivier — software developer with a newly earned <strong>Bachelor of Computing</strong>,
+            focused on <strong>Fintech solutions in C#</strong> and hands-on experience building{' '}
+            <strong>API security tooling</strong>. Explore a gated portfolio that demonstrates secure
+            gateways, CI/CD pipelines, and live security simulations.
           </p>
+
+          <ul className="landing-credentials">
+            <li>🎓 Bachelor of Computing</li>
+            <li>💳 Fintech &amp; enterprise C# development</li>
+            <li>🛡️ API hardening, rate limiting &amp; payload filtering</li>
+          </ul>
 
           <div className="landing-hero__actions">
             <Link to="/gateway" className="btn btn-primary">
               Enter the gateway
             </Link>
             <a
-              href="https://github.com"
+              href="https://www.github.com/lincalibur"
               className="btn btn-secondary"
               target="_blank"
               rel="noreferrer"
             >
-              View source
+              View GitHub
             </a>
           </div>
 
@@ -76,9 +83,9 @@ export function LandingPage() {
         <div className="landing-blocks">
           {[
             { num: '01', title: 'Gateway', desc: 'Email OTP and JWT gatekeeper' },
-            { num: '02', title: 'Pipeline', desc: 'CI/CD graph with YAML snippets' },
-            { num: '03', title: 'Orchestration', desc: 'Host and container metrics' },
-            { num: '04', title: 'Automation', desc: 'Script repository — recon, deploy, and compliance' },
+            { num: '02', title: 'Deploy Pipeline', desc: 'CI/CD flow with sanitized YAML snippets' },
+            { num: '03', title: 'API Security', desc: 'Interactive gateway circuit & attack simulation' },
+            { num: '04', title: 'Automation', desc: 'Script repository with live console demos' },
           ].map((block) => (
             <article key={block.num} className="landing-block card">
               <span className="landing-block__num">{block.num}</span>

@@ -1,115 +1,155 @@
-import { useCallback, useEffect, useState } from 'react';
-import {
-  getHostStats,
-  logInteraction,
-  USE_HOST_STATS_API,
-  type HostStats,
-} from '../../api/apiClient';
+import { useEffect, useRef, useState } from 'react';
+import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
 import './OrchestrationPage.css';
 
+type AttackPhase = 'idle' | 'traveling' | 'blocked' | 'done';
+
+interface SecurityLogEntry {
+  time: string;
+  level: 'info' | 'warn' | 'block';
+  message: string;
+}
+
+function formatTime(): string {
+  return new Date().toISOString().replace('T', ' ').slice(11, 19);
+}
+
 export function OrchestrationPage() {
-  const [stats, setStats] = useState<HostStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
-
-  const loadStats = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await getHostStats(getToken());
-      setStats(result);
-      setLastRefresh(new Date());
-    } catch {
-      setError('Failed to load host statistics.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const [attackPhase, setAttackPhase] = useState<AttackPhase>('idle');
+  const [securityFlash, setSecurityFlash] = useState(false);
+  const [logs, setLogs] = useState<SecurityLogEntry[]>([
+    {
+      time: formatTime(),
+      level: 'info',
+      message: 'Gateway online — token validation and rate limiting active.',
+    },
+  ]);
+  const attackTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    void loadStats();
     void logInteraction('orchestration', 'view', null, getToken());
-  }, [loadStats]);
+    return () => {
+      if (attackTimerRef.current) {
+        window.clearTimeout(attackTimerRef.current);
+      }
+    };
+  }, []);
 
-  const memoryPercent = stats
-    ? Math.round((stats.memoryUsedMb / stats.memoryTotalMb) * 100)
-    : 0;
+  function appendLog(level: SecurityLogEntry['level'], message: string) {
+    setLogs((prev) => [...prev, { time: formatTime(), level, message }]);
+  }
+
+  function simulateAttack() {
+    if (attackPhase === 'traveling' || attackPhase === 'blocked') {
+      return;
+    }
+
+    setAttackPhase('traveling');
+    appendLog('warn', 'Inbound request detected: suspicious SQL injection pattern in query string.');
+    void logInteraction('orchestration', 'simulate_attack', null, getToken());
+
+    attackTimerRef.current = window.setTimeout(() => {
+      setSecurityFlash(true);
+      setAttackPhase('blocked');
+
+      attackTimerRef.current = window.setTimeout(() => {
+        setSecurityFlash(false);
+        setAttackPhase('done');
+        appendLog(
+          'block',
+          '403 Forbidden — Rate limit / payload filter triggered. Malicious packet dropped at API hardening layer.',
+        );
+
+        attackTimerRef.current = window.setTimeout(() => {
+          setAttackPhase('idle');
+        }, 2500);
+      }, 700);
+    }, 1400);
+  }
 
   return (
-    <div className="orchestration-page">
-      <header className="block-header orchestration-header">
+    <div className="gateway-page">
+      <header className="block-header gateway-header">
         <div>
           <span className="badge badge-muted">Block 03</span>
-          <h1>System Orchestration</h1>
+          <h1>API Gateway &amp; Security</h1>
           <p>
-            {USE_HOST_STATS_API
-              ? 'Live metrics from the protected host stats API.'
-              : 'Preview metrics from fixture data until Features:HostStats is enabled.'}
+            Visual circuit showing how client traffic is validated, rate-limited, and routed to healthy
+            microservices — with a live attack simulation.
           </p>
         </div>
         <button
           type="button"
-          className="btn btn-secondary"
-          onClick={() => void loadStats()}
-          disabled={loading}
+          className="btn btn-primary gateway-attack-btn"
+          onClick={simulateAttack}
+          disabled={attackPhase === 'traveling' || attackPhase === 'blocked'}
         >
-          {loading ? 'Refreshing…' : 'Refresh'}
+          Simulate SQL Injection / API Abuse
         </button>
       </header>
 
-      {error && <div className="alert alert-error">{error}</div>}
-
-      {stats && (
-        <>
-          <div className="orchestration-metrics">
-            <article className="metric-card card">
-              <h2>CPU</h2>
-              <div className="metric-value">{stats.cpuPercent.toFixed(1)}%</div>
-              <div className="metric-bar">
-                <div
-                  className="metric-bar__fill metric-bar__fill--cpu"
-                  style={{ width: `${Math.min(stats.cpuPercent, 100)}%` }}
-                />
-              </div>
-            </article>
-
-            <article className="metric-card card">
-              <h2>Memory</h2>
-              <div className="metric-value">
-                {stats.memoryUsedMb.toFixed(0)} / {stats.memoryTotalMb.toFixed(0)} MB
-              </div>
-              <div className="metric-bar">
-                <div
-                  className="metric-bar__fill metric-bar__fill--memory"
-                  style={{ width: `${memoryPercent}%` }}
-                />
-              </div>
-              <p className="metric-sub">{memoryPercent}% utilized</p>
-            </article>
+      <section className="gateway-circuit card">
+        <div className="gateway-column">
+          <h2>Client Request</h2>
+          <div className="gateway-node">
+            <p>Web Traffic</p>
+            <span className="gateway-node__status gateway-node__status--ok">Normal flow</span>
           </div>
+          <div className="gateway-node gateway-node--threat">
+            <p>Malicious Payload 🛑</p>
+            <span className="gateway-node__status gateway-node__status--danger">Blocked path</span>
+          </div>
+        </div>
 
-          <section className="card containers-section">
-            <h2>Container status</h2>
-            <ul className="container-list">
-              {stats.containerStatuses.map((status) => (
-                <li key={status} className="container-list__item">
-                  <span className="status-dot status-dot--healthy" aria-hidden="true" />
-                  <code>{status}</code>
-                </li>
-              ))}
-            </ul>
-          </section>
+        <div className="gateway-flow" aria-hidden="true">
+          <div className={`gateway-flow__track${attackPhase !== 'idle' && attackPhase !== 'done' ? ' gateway-flow__track--active' : ''}`}>
+            {(attackPhase === 'traveling' || attackPhase === 'blocked') && (
+              <span className={`gateway-packet${attackPhase === 'blocked' ? ' gateway-packet--blocked' : ''}`} />
+            )}
+          </div>
+          <span className="gateway-flow__arrow">→</span>
+        </div>
 
-          {lastRefresh && (
-            <p className="orchestration-footer">
-              Last updated: {lastRefresh.toLocaleTimeString()}
-            </p>
-          )}
-        </>
-      )}
+        <div className={`gateway-column gateway-column--security${securityFlash ? ' gateway-column--flash' : ''}`}>
+          <h2>Security Layer</h2>
+          <div className="gateway-node">
+            <p>API Hardening</p>
+            <span className="gateway-node__status gateway-node__status--ok">Token validation</span>
+          </div>
+          <div className="gateway-node">
+            <p>Rate Limiter 🛡️</p>
+            <span className="gateway-node__status gateway-node__status--shield">Payload filter</span>
+          </div>
+        </div>
+
+        <div className="gateway-flow" aria-hidden="true">
+          <span className="gateway-flow__arrow">→</span>
+        </div>
+
+        <div className="gateway-column">
+          <h2>Microservices</h2>
+          <div className="gateway-node">
+            <p>web</p>
+            <span className="gateway-node__status gateway-node__status--ok">Healthy</span>
+          </div>
+          <div className="gateway-node">
+            <p>api</p>
+            <span className="gateway-node__status gateway-node__status--ok">Healthy</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="gateway-log card">
+        <h2>Security event log</h2>
+        <div className="gateway-log__panel" role="log" aria-live="polite">
+          {logs.map((entry, index) => (
+            <div key={`${entry.time}-${index}`} className={`gateway-log__line gateway-log__line--${entry.level}`}>
+              <span className="gateway-log__time">[{entry.time}]</span> {entry.message}
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

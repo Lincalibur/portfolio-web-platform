@@ -40,6 +40,52 @@
   margin-left: 1.5rem;
 }
 
+.pipeline-graph__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pipeline-graph__toolbar h2 {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.pipeline-play-btn {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.875rem;
+}
+
+.pipeline-connector--live {
+  background: linear-gradient(180deg, var(--success), rgba(52, 211, 153, 0.35));
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.45);
+}
+
+.pipeline-node--playing {
+  border-color: var(--success);
+  background: rgba(52, 211, 153, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(52, 211, 153, 0.45),
+    0 0 20px rgba(52, 211, 153, 0.35);
+  animation: pipeline-pulse 0.8s ease-in-out infinite;
+}
+
+.pipeline-node--completed {
+  border-color: rgba(52, 211, 153, 0.55);
+  background: rgba(52, 211, 153, 0.08);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+}
+
+@keyframes pipeline-pulse {
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(52, 211, 153, 0.65),
+      0 0 28px rgba(52, 211, 153, 0.45);
+  }
+}
+
 .pipeline-node {
   display: flex;
   flex-direction: column;

@@ -6,7 +6,7 @@ import './StoryLayout.css';
 const storyBlocks = [
   { to: '/story', label: 'Overview', end: true },
   { to: '/story/pipeline', label: 'Pipeline', end: false },
-  { to: '/story/orchestration', label: 'Orchestration', end: false },
+  { to: '/story/orchestration', label: 'API Security', end: false },
   { to: '/story/automation', label: 'Automation', end: false },
 ];
 
