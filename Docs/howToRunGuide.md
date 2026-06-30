@@ -44,7 +44,23 @@ portfolio-web-platform/
 
 You need **two terminals**: one for the API, one for the frontend.
 
-### Step 1 — Start the API
+### Option A — Double-click (Windows)
+
+From the repository root:
+
+| File | Action |
+| --- | --- |
+| **`start-dev.bat`** | Opens **two PowerShell windows** — API first, then frontend (recommended) |
+| `start-api.bat` | API only (cmd window) |
+| `start-web.bat` | Frontend only (cmd window) |
+
+Wait until the API window shows **Now listening on**, then open **http://localhost:5173**.
+
+First-time frontend setup: run `npm install` once inside `src/Portfolio.Web` before using the batch files.
+
+### Option B — Manual terminals
+
+#### Step 1 — Start the API
 
 ```powershell
 cd src/Portfolio.Api
@@ -235,8 +251,9 @@ Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.m
 
 | What | Command / URL |
 | --- | --- |
-| Run API | `cd src/Portfolio.Api` → `dotnet run` |
-| Run SPA | `cd src/Portfolio.Web` → `npm run dev` |
+| Run both (Windows) | Double-click `start-dev.bat` at repo root |
+| Run API | `start-api.bat` or `cd src/Portfolio.Api` → `dotnet run` |
+| Run SPA | `start-web.bat` or `cd src/Portfolio.Web` → `npm run dev` |
 | App URL | http://localhost:5173 |
 | API health | http://localhost:5180/health |
 | Gateway | http://localhost:5173/gateway |

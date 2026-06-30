@@ -41,6 +41,8 @@ A self-hosted interactive CV website designed for **low resource use** on a **De
 
 See **[`Docs/howToRunGuide.md`](Docs/howToRunGuide.md)** for the full step-by-step guide (prerequisites, two-terminal workflow, OTP flow, env vars, and troubleshooting).
 
+**Windows shortcut:** double-click **`start-dev.bat`** at the repo root to open the API and frontend in two PowerShell windows.
+
 The API lives in [`src/Portfolio.Api/`](src/Portfolio.Api/). Open `PortfolioWebPlatform.slnx` in **Visual Studio 2022** or **Rider**, or use the CLI.
 
 ### Prerequisites
