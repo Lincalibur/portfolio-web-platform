@@ -2,7 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ApiError, logInteraction, requestAccess } from '../api/apiClient';
 import { setPendingEmail } from '../auth/authStorage';
+import { GatewaySqlBlockModal } from '../components/gateway/GatewaySqlBlockModal';
 import { SiteHeader } from '../components/layout/SiteHeader';
+import { findSqlInjectionField } from '../utils/detectSqlInjection';
 import './GatewayPage.css';
 
 interface FormErrors {
@@ -20,6 +22,8 @@ export function GatewayPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [sqlBlockOpen, setSqlBlockOpen] = useState(false);
+  const [sqlBlockField, setSqlBlockField] = useState<string | undefined>();
 
   useEffect(() => {
     void logInteraction('gateway', 'view', null, null);
@@ -41,9 +45,32 @@ export function GatewayPage() {
     return next;
   }
 
+  function handleSqlInjectionBlocked(fieldLabel: string, fieldKey: string) {
+    setSqlBlockField(fieldLabel);
+    setSqlBlockOpen(true);
+    setSubmitting(false);
+    void logInteraction(
+      'gateway',
+      'sql_injection_blocked',
+      JSON.stringify({ field: fieldKey }),
+      null,
+    );
+  }
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setSuccessMessage(null);
+
+    const injection = findSqlInjectionField({
+      fullName,
+      email,
+      company,
+    });
+
+    if (injection) {
+      handleSqlInjectionBlocked(injection.label, injection.field);
+      return;
+    }
 
     const clientErrors = validateClient();
     if (Object.keys(clientErrors).length > 0) {
@@ -85,6 +112,12 @@ export function GatewayPage() {
 
   return (
     <div className="page gateway-page">
+      <GatewaySqlBlockModal
+        open={sqlBlockOpen}
+        fieldLabel={sqlBlockField}
+        onClose={() => setSqlBlockOpen(false)}
+      />
+
       <SiteHeader>
         <Link to="/" className="btn btn-ghost">
           Back home
@@ -94,7 +127,11 @@ export function GatewayPage() {
       <main className="container gateway-main">
         <div className="gateway-card card">
           <div className="gateway-card__header">
-            <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTNubHBxMjV2cGR1NDZ3dHJqMTY5a3RoYXFvMTE4OWdtY29hbnF5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ip5L71rU6sjcc/giphy.gif" alt="Gateway" style={{ width: '100%', borderRadius: '8px', marginBottom: '1.5rem', display: 'block' }} />
+            <img
+              src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTNubHBxMjV2cGR1NDZ3dHJqMTY5a3RoYXFvMTE4OWdtY29hbnF5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ip5L71rU6sjcc/giphy.gif"
+              alt="Gateway"
+              className="gateway-card__banner"
+            />
             <span className="badge badge-muted">Block 01</span>
             <h1>Gateway</h1>
             <p>Verify your identity to access the interactive resume story.</p>
