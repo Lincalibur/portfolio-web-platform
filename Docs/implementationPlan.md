@@ -39,7 +39,7 @@ Complements [`solutionDesign.md`](solutionDesign.md).
 | `GET /api/host/stats` | Implemented, placeholder | **Gate behind `Features:HostStats`** until F6 |
 | `POST /api/metrics/interaction` | Implemented | **Gate behind `Features:InteractionMetrics`** until F4 |
 | Bulk `/api/mock/*` | Not implemented | **Do not implement** (use fixtures instead) |
-| Frontend | Not started | Start at F1 |
+| Frontend | F1–F7 implemented (`src/Portfolio.Web`) | F8 docs vault (deferred — repo `Docs/` only); F9 Docker/nginx deploy |
 
 ---
 
@@ -207,7 +207,7 @@ F0 ──► F1 ──► F2 ──► F3 ──► F4 ──► F5 ──► F6
 
 | Step | Backend | Frontend | Test |
 | --- | --- | --- | --- |
-| F7.1 | **No** `POST /api/automation/run` unless you add a sandboxed, allow-listed executor later | Button plays script from `public/fixtures/automation-parse-logs.json` | Lines animate in UI |
+| F7.1 | **No** `POST /api/automation/run` unless you add a sandboxed, allow-listed executor later | Tabbed script repository from `public/fixtures/automation-scripts.json` + source under `fixtures/scripts/` | Lines animate in UI |
 | F7.2 | — | If F4 done: `logInteraction('automation', 'run_script', …)` | 204 |
 
 **Do not add:** open-ended script execution endpoint (high risk).
@@ -357,7 +357,8 @@ Invoke-RestMethod "$base/api/host/stats" -Headers @{ Authorization = "Bearer $to
 | --- | --- | --- |
 | `Features:HostStats` | F6 | `true` |
 | `Features:InteractionMetrics` | F4 | `true` |
-| `VITE_API_BASE_URL` | F1 | `https://localhost:7262` |
+| `VITE_API_BASE_URL` | F1 | empty in dev (use proxy); production API origin |
+| `VITE_API_PROXY_TARGET` | F1 | `http://localhost:5180` (Vite dev proxy only) |
 | `Cors:AllowedOrigins` | F1 | `http://localhost:5173` |
 | `Jwt:SigningKey` | F2 | user-secrets (≥32 chars) |
 
@@ -386,6 +387,7 @@ One PR = one feature = one slice of API surface.
 
 ## 11. Related documents
 
+* [`howToRunGuide.md`](howToRunGuide.md) — local setup, auth flow, troubleshooting
 * [`solutionDesign.md`](solutionDesign.md) — architecture
 * [`README.md`](../README.md) — run instructions
 * [`Docs/Postman/`](Postman/) — Postman collection (primary manual QA)

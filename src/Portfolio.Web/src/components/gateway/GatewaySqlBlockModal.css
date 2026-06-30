@@ -1,0 +1,116 @@
+.sql-block-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(80, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: sql-block-fade-in 0.2s ease-out;
+}
+
+.sql-block-window {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid #f87171;
+  background: linear-gradient(165deg, rgba(69, 10, 10, 0.96) 0%, rgba(28, 8, 8, 0.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(248, 113, 113, 0.35),
+    0 0 48px rgba(220, 38, 38, 0.45),
+    0 24px 48px rgba(0, 0, 0, 0.55);
+  text-align: center;
+  animation: sql-block-shake 0.45s ease-in-out;
+}
+
+.sql-block-window__glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 0%, rgba(248, 113, 113, 0.35), transparent 65%);
+  pointer-events: none;
+}
+
+.sql-block-window__media {
+  position: relative;
+  margin-bottom: 1rem;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sql-block-window__gif {
+  width: min(280px, 100%);
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.sql-block-window__gif-fallback {
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.sql-block-window__title {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+  color: #fecaca;
+  text-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
+}
+
+.sql-block-window__message {
+  margin: 0 0 0.5rem;
+  color: #fca5a5;
+  font-size: 0.9375rem;
+}
+
+.sql-block-window__sub {
+  margin: 0 0 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.sql-block-window__btn {
+  width: 100%;
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  border-color: #f87171;
+  color: #fff;
+}
+
+.sql-block-window__btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+@keyframes sql-block-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sql-block-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(5px);
+  }
+}

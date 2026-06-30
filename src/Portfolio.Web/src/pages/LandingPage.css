@@ -1,0 +1,101 @@
+.landing-page {
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(0, 255, 102, 0.06),
+    transparent 70%
+  );
+}
+
+.landing-hero {
+  padding: 3rem 0 4rem;
+}
+
+.landing-hero__content {
+  max-width: 640px;
+  margin-bottom: 3rem;
+}
+
+.landing-hero__eyebrow {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.landing-hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.landing-hero__lead {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.landing-hero__lead strong {
+  color: var(--text-primary);
+}
+
+.landing-credentials {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.landing-credentials li {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+.landing-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.landing-health {
+  padding: 0.85rem 1rem;
+}
+
+.landing-health__row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.landing-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.landing-block {
+  padding: 1.25rem;
+}
+
+.landing-block__num {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.landing-block h3 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.landing-block p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}

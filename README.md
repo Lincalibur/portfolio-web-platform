@@ -18,8 +18,7 @@ A self-hosted interactive CV website designed for **low resource use** on a **De
 * **Gateway:** Email capture and token validation UI.
 * **DevOps pipeline:** Interactive CI/CD visualization (YAML from this repo).
 * **System orchestration:** Host/container metrics from a protected API.
-* **Automation hub:** Terminal-style demo of scripting skills.
-* **Documentation vault:** Live view of architecture docs (including the SDD).
+* **Automation hub:** Terminal-style scripting demos with visual console effects.
 
 ---
 
@@ -40,12 +39,16 @@ A self-hosted interactive CV website designed for **low resource use** on a **De
 
 ## Quick setup (local development)
 
-The API lives in [`src/Portfolio.Api/`](src/Portfolio.Api/). Open `PortfolioWebPlatform.sln` in **Visual Studio 2022** or **Rider**, or use the CLI — both work; the repo is already scaffolded to match [`Docs/solutionDesign.md`](Docs/solutionDesign.md).
+See **[`Docs/howToRunGuide.md`](Docs/howToRunGuide.md)** for the full step-by-step guide (prerequisites, two-terminal workflow, OTP flow, env vars, and troubleshooting).
+
+**Windows shortcut:** double-click **`start-dev.bat`** at the repo root to open the API and frontend in two PowerShell windows.
+
+The API lives in [`src/Portfolio.Api/`](src/Portfolio.Api/). Open `PortfolioWebPlatform.slnx` in **Visual Studio 2022** or **Rider**, or use the CLI.
 
 ### Prerequisites
 
 * [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet)
-* [Node.js 20+](https://nodejs.org/) (for the SPA — coming in `src/Portfolio.Web`)
+* [Node.js 20+](https://nodejs.org/) (for the SPA in `src/Portfolio.Web`)
 
 ### Run API
 
@@ -75,13 +78,30 @@ dotnet user-secrets set "Jwt:SigningKey" "your-production-grade-secret-at-least-
 dotnet user-secrets set "Smtp:Host" "smtp.example.com"
 ```
 
-### Run frontend (once scaffold exists)
+### Run frontend
 
 ```powershell
 cd src/Portfolio.Web
-npm ci
+npm install
 npm run dev
 ```
+
+* Dev server: **http://localhost:5173**
+* Landing: `/` (calls `GET /health`)
+* Gateway: `/gateway` → OTP verify → JWT → `/story/*`
+
+**Local API connection:** In development, leave `VITE_API_BASE_URL` empty in `.env.development`. Vite proxies `/health` and `/api` to `http://localhost:5180` so the browser is not blocked by the API’s self-signed HTTPS certificate. Start the API with the **https** launch profile (`dotnet run` — default), which listens on both `https://localhost:7262` and `http://localhost:5180`.
+
+If the health check still fails, confirm the API is running and that `VITE_API_PROXY_TARGET` matches the API HTTP URL.
+
+Optional flags in `.env.development`:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `VITE_ENABLE_INTERACTION_METRICS` | `false` | POST to `/api/metrics/interaction` when `Features:InteractionMetrics` is on |
+| `VITE_USE_HOST_STATS_API` | `false` | Use live `GET /api/host/stats` instead of `public/fixtures/host-stats.json` |
+
+Run both API and SPA together for the full auth flow. In Development, OTP codes appear in the API console when SMTP is not configured.
 
 ---
 
@@ -99,6 +119,7 @@ Use a `.env` file (from `.env.example`) for `Jwt__SigningKey`, `Smtp__*`, and da
 
 | Document | Purpose |
 | --- | --- |
+| [`Docs/howToRunGuide.md`](Docs/howToRunGuide.md) | **Local setup** — prerequisites, run API + SPA, auth flow, troubleshooting |
 | [`Docs/solutionDesign.md`](Docs/solutionDesign.md) | Architecture, security, Docker layout |
 | [`Docs/implementationPlan.md`](Docs/implementationPlan.md) | **Feature-by-feature** build plan (F0–F9), gated endpoints, fixture-based UI testing |
 | [`Docs/Postman/`](Docs/Postman/) | Postman collection + local environment (keep in sync with API changes) |

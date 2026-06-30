@@ -1,0 +1,58 @@
+{
+  "title": "Script Repository",
+  "description": "Run cinematic automation demos — ASCII banners, animated progress, radar scans, and rocket launch finales.",
+  "scripts": [
+    {
+      "id": "asset_discovery",
+      "filename": "asset_discovery.py",
+      "title": "The Reconnaissance Tool",
+      "tagline": "Modular passive reconnaissance & asset mapping",
+      "description": "Enter a target domain and watch a radar scan map your digital footprint with animated progress and a live results tree.",
+      "highlights": [
+        "ASCII radar scan",
+        "Animated progress bar",
+        "Live endpoint tree"
+      ],
+      "language": "python",
+      "sourcePath": "/fixtures/scripts/asset_discovery.py",
+      "delayMs": 120,
+      "inputs": [
+        {
+          "id": "target",
+          "label": "Target domain",
+          "type": "text",
+          "default": "portfolio.local",
+          "placeholder": "example.com"
+        }
+      ]
+    },
+    {
+      "id": "deploy_env",
+      "filename": "deploy_env.sh",
+      "title": "The DevOps Framework",
+      "tagline": "Launch sequence automation",
+      "description": "Pick an environment and follow a staged launch — progress bars for each phase, then a rocket lift-off finale when everything is healthy.",
+      "highlights": [
+        "Multi-phase progress UI",
+        "Rocket ASCII animation",
+        "Launch complete finale"
+      ],
+      "language": "bash",
+      "sourcePath": "/fixtures/scripts/deploy_env.sh",
+      "delayMs": 110,
+      "inputs": [
+        {
+          "id": "environment",
+          "label": "Environment",
+          "type": "select",
+          "default": "staging",
+          "options": [
+            { "value": "dev", "label": "Development" },
+            { "value": "staging", "label": "Staging" },
+            { "value": "production", "label": "Production" }
+          ]
+        }
+      ]
+    }
+  ]
+}
