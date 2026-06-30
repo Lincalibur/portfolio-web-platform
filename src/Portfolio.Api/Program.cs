@@ -13,7 +13,9 @@ if (args.Length >= 2 && args[0] == "hash-admin-password")
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true);
+builder.Configuration
+    .AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true)
+    .AddUserSecrets<Program>(optional: true);
 
 builder.Services.AddPortfolioServices(builder.Configuration);
 

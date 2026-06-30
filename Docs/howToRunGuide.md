@@ -168,6 +168,8 @@ Admin credentials are **never** committed. Configure them locally with **user se
 .\scripts\setup-admin.ps1 -Username "your-username" -Password "your-strong-password"
 ```
 
+This stores credentials in **dotnet user secrets** and also writes `src/Portfolio.Api/appsettings.secrets.json` (gitignored) as a local backup. Restart the API after running the script.
+
 **Option B — manual user secrets:**
 
 ```powershell

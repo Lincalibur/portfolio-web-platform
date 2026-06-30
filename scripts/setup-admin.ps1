@@ -42,12 +42,22 @@ try {
     dotnet user-secrets set "Admin:Username" "$Username"
     dotnet user-secrets set "Admin:PasswordHash" "$hash"
 
+    $secretsJsonPath = Join-Path $apiProject 'appsettings.secrets.json'
+    @{
+        Admin = @{
+            Username           = $Username
+            PasswordHash       = $hash
+            AccessTokenMinutes = 480
+        }
+    } | ConvertTo-Json | Set-Content -Path $secretsJsonPath -Encoding utf8
+
     $secrets = dotnet user-secrets list | Out-String
     if ($secrets -notmatch 'Admin:PasswordHash\s*=') {
         throw 'Admin:PasswordHash was not saved. Re-run the script after pulling the latest setup-admin.ps1 fix.'
     }
 
     Write-Host "Admin credentials stored in user secrets for $Username."
+    Write-Host "Backup written to src/Portfolio.Api/appsettings.secrets.json (gitignored)."
     Write-Host 'Open http://localhost:5173/admin/login after starting the app.'
 }
 finally {
