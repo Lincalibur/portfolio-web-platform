@@ -1,6 +1,5 @@
 import {
   bannerSteps,
-  buildFailureTree,
   buildProgressBar,
   buildSparkleFinale,
   buildSuccessTree,
@@ -44,8 +43,6 @@ export function buildCommand(scriptId: string, params: Record<string, string>): 
       return `python asset_discovery.py --target ${params.target || 'portfolio.local'}`;
     case 'deploy_env':
       return `./deploy_env.sh ${params.environment || 'staging'}`;
-    case 'compliance_check':
-      return `ansible-playbook compliance_check.yml -i ${params.inventory || 'application_servers'} --extra-vars baseline=${params.baseline || 'cis_level1'}`;
     default:
       return 'run';
   }
@@ -60,8 +57,6 @@ export function generateAutomationSteps(
       return generateAssetDiscoverySteps(params);
     case 'deploy_env':
       return generateDeployEnvSteps(params);
-    case 'compliance_check':
-      return generateComplianceSteps(params);
     default:
       return [{ type: 'line', line: { text: 'Unknown script.', tone: 'error' } }];
   }
@@ -175,111 +170,6 @@ function generateDeployEnvSteps(params: Record<string, string>): AutomationStep[
     },
     { type: 'finale', success: true },
   ];
-}
-
-function generateComplianceSteps(params: Record<string, string>): AutomationStep[] {
-  const inventory = params.inventory || 'application_servers';
-  const baseline = params.baseline || 'cis_level1';
-  const inventoryLabel =
-    inventory === 'edge_nodes'
-      ? 'Edge nodes'
-      : inventory === 'data_plane'
-        ? 'Data plane'
-        : 'Application servers';
-
-  const baselineLabel =
-    baseline === 'pci_dss' ? 'PCI-DSS' : baseline === 'custom_hard' ? 'Custom hardening' : 'CIS Level 1';
-
-  const strictAudit = baseline === 'pci_dss' && Math.random() < 0.3;
-  const trustScore = strictAudit ? randomInt(61, 84) : randomInt(88, 99);
-
-  const checks = strictAudit
-    ? [
-        'Firewall baseline enforced',
-        'File permissions tightened',
-        'Secret scan completed',
-        'Permissive config detected on 1 host',
-      ]
-    : [
-        'Firewall baseline enforced',
-        'File permissions tightened',
-        'No plaintext secrets in config paths',
-        'Ingress policy locked down',
-        'Audit trail updated',
-      ];
-
-  const steps: AutomationStep[] = [
-    ...bannerSteps(),
-    { type: 'spinner', message: 'Running trust & safety audit…', durationMs: 1300, intervalMs: 80 },
-    ...progressSequence('audit', `Evaluating ${inventoryLabel}`, [18, 36, 54, 72, 90, 100], 150),
-    {
-      type: 'line',
-      line: {
-        text: `Baseline: ${baselineLabel}  ·  Hosts scanned: ${randomInt(1, 4)}`,
-        tone: 'info',
-      },
-      delayMs: 200,
-    },
-  ];
-
-  if (strictAudit) {
-    steps.push(
-      {
-        type: 'line',
-        line: { text: buildFailureTree(checks), tone: 'warn', meta: 'tree' },
-        delayMs: 280,
-      },
-      {
-        type: 'line',
-        line: {
-          text: [
-            '┌─────────────────────────────┐',
-            `│  TRUST SCORE:  ${trustScore} / 100       │`,
-            '│  STATUS: REVIEW REQUIRED    │',
-            '└─────────────────────────────┘',
-          ].join('\n'),
-          tone: 'warn',
-          meta: 'ascii',
-        },
-        delayMs: 300,
-      },
-      { type: 'finale', success: false },
-    );
-  } else {
-    steps.push(
-      {
-        type: 'line',
-        line: { text: buildSuccessTree(checks), tone: 'success', meta: 'tree' },
-        delayMs: 280,
-      },
-      {
-        type: 'line',
-        line: {
-          text: [
-            '┌─────────────────────────────┐',
-            `│  TRUST SCORE:  ${trustScore} / 100       │`,
-            '│  STATUS: COMPLIANCE PASSED  │',
-            '└─────────────────────────────┘',
-          ].join('\n'),
-          tone: 'success',
-          meta: 'ascii',
-        },
-        delayMs: 300,
-      },
-      {
-        type: 'line',
-        line: {
-          text: buildSparkleFinale('AUDIT COMPLETE', 'Security posture verified'),
-          tone: 'accent',
-          meta: 'finale',
-        },
-        delayMs: 200,
-      },
-      { type: 'finale', success: true },
-    );
-  }
-
-  return steps;
 }
 
 export function getDefaultParams(inputs: ScriptInputDefinition[]): Record<string, string> {

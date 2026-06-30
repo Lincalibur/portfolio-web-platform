@@ -1,6 +1,6 @@
 {
   "title": "Script Repository",
-  "description": "Run cinematic automation demos — ASCII banners, animated progress, radar scans, rocket launches, and trust-score finales.",
+  "description": "Run cinematic automation demos — ASCII banners, animated progress, radar scans, and rocket launch finales.",
   "scripts": [
     {
       "id": "asset_discovery",
@@ -50,45 +50,6 @@
             { "value": "dev", "label": "Development" },
             { "value": "staging", "label": "Staging" },
             { "value": "production", "label": "Production" }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "compliance_check",
-      "filename": "compliance_check.yml",
-      "title": "The Risk & Compliance Audit",
-      "tagline": "Trust & safety scorecard",
-      "description": "Run a visual compliance audit with checklist trees and a framed trust score — stricter baselines can surface review warnings.",
-      "highlights": [
-        "npm-style success tree",
-        "Trust score panel",
-        "Sparkle finale on pass"
-      ],
-      "language": "yaml",
-      "sourcePath": "/fixtures/scripts/compliance_check.yml",
-      "delayMs": 130,
-      "inputs": [
-        {
-          "id": "inventory",
-          "label": "Inventory group",
-          "type": "select",
-          "default": "application_servers",
-          "options": [
-            { "value": "application_servers", "label": "Application servers" },
-            { "value": "edge_nodes", "label": "Edge nodes" },
-            { "value": "data_plane", "label": "Data plane" }
-          ]
-        },
-        {
-          "id": "baseline",
-          "label": "Compliance baseline",
-          "type": "select",
-          "default": "cis_level1",
-          "options": [
-            { "value": "cis_level1", "label": "CIS Level 1" },
-            { "value": "pci_dss", "label": "PCI-DSS" },
-            { "value": "custom_hard", "label": "Custom hardening" }
           ]
         }
       ]

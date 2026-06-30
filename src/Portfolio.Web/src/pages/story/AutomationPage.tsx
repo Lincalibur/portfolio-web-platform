@@ -300,7 +300,7 @@ export function AutomationPage() {
             <div className="terminal__content">
               {visibleLines.length === 0 && !spinnerLine ? (
                 <p className="terminal__placeholder">
-                  Hit Run script to see the demo output — ASCII banners, progress bars, rocket launch, and trust scores.
+                  Hit Run script to see the demo output — ASCII banners, progress bars, and rocket launch finales.
                 </p>
               ) : (
                 visibleLines.map((line, index) => (

@@ -55,7 +55,7 @@ const blocks = [
     to: '/story/automation',
     num: '04',
     title: 'Automation Hub',
-    description: 'Script repository — reconnaissance, deployment, and compliance demos.',
+    description: 'Script repository — reconnaissance and deployment demos.',
   },
 ];
 
