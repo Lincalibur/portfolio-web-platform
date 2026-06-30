@@ -1,9 +1,0 @@
-Output from the setup admin passwords.
-
-PS C:\Users\liamo\Desktop\Ideas\Portfolio-website\portfolio-web-platform> .\scripts\setup-admin.ps1 -Username "Admin" -Password "Admin"                            
-Building API to generate password hash...
-Successfully saved Admin:Username to the secret store.
-Specify --help for a list of available options and commands.
-Unrecognized command or argument 'zEYuRdBRHZm5Gl4XzTO8nQ==.yjiy3CV9NOyySju5CVPGl0HriXzSQ2HFLsvL+eufWJ4='
-Admin credentials stored in user secrets for Admin.
-Open http://localhost:5173/admin/login after starting the app.
