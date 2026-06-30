@@ -1,6 +1,6 @@
 {
   "title": "Deploy pipeline",
-  "playSequence": ["checkout", "build", "test"],
+  "playSequence": ["checkout", "build", "test", "publish", "docker", "deploy"],
   "nodes": [
     { "id": "checkout", "label": "Checkout", "status": "success" },
     { "id": "build", "label": "dotnet build", "status": "success" },

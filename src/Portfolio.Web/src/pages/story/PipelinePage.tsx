@@ -16,7 +16,7 @@ interface PipelineData {
   yamlSnippets: Record<string, string>;
 }
 
-const PLAY_DURATION_MS = 5000;
+const PLAY_DURATION_MS = 7200;
 
 const statusBadge: Record<PipelineNode['status'], string> = {
   success: 'badge-success',
@@ -61,7 +61,10 @@ export function PipelinePage() {
   async function playPipeline() {
     if (!data || playing) return;
 
-    const sequence = data.playSequence ?? ['checkout', 'build', 'test'];
+    const sequence =
+      data.playSequence && data.playSequence.length > 0
+        ? data.playSequence
+        : data.nodes.map((node) => node.id);
     const stepMs = PLAY_DURATION_MS / sequence.length;
 
     setPlaying(true);
