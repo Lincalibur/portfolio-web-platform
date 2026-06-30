@@ -15,13 +15,23 @@ if (-not (Test-Path $apiProject)) {
     throw "Portfolio.Api project not found at $apiProject"
 }
 
-Write-Host 'Building API to generate password hash...'
-$hash = dotnet run --project $apiProject --no-build -- hash-admin-password $Password 2>$null
-if (-not $hash) {
-    dotnet build $apiProject | Out-Null
-    $hash = dotnet run --project $apiProject --no-build -- hash-admin-password $Password
+function Get-AdminPasswordHash {
+    param([string]$ProjectPath, [string]$PlainPassword)
+
+    $output = & dotnet run --project $ProjectPath --no-build -- hash-admin-password "$PlainPassword" 2>&1 |
+        ForEach-Object { "$_" }
+
+    $hash = $output |
+        Where-Object { $_ -match '^[A-Za-z0-9+/=]+\.[A-Za-z0-9+/=]+$' } |
+        Select-Object -Last 1
+
+    return "$hash".Trim()
 }
 
+Write-Host 'Building API to generate password hash...'
+dotnet build $apiProject | Out-Null
+
+$hash = Get-AdminPasswordHash -ProjectPath $apiProject -PlainPassword $Password
 if ([string]::IsNullOrWhiteSpace($hash)) {
     throw 'Failed to generate password hash.'
 }
@@ -29,8 +39,14 @@ if ([string]::IsNullOrWhiteSpace($hash)) {
 Push-Location $apiProject
 try {
     dotnet user-secrets init | Out-Null
-    dotnet user-secrets set 'Admin:Username' $Username
-    dotnet user-secrets set 'Admin:PasswordHash' $hash.Trim()
+    dotnet user-secrets set "Admin:Username" "$Username"
+    dotnet user-secrets set "Admin:PasswordHash" "$hash"
+
+    $secrets = dotnet user-secrets list | Out-String
+    if ($secrets -notmatch 'Admin:PasswordHash\s*=') {
+        throw 'Admin:PasswordHash was not saved. Re-run the script after pulling the latest setup-admin.ps1 fix.'
+    }
+
     Write-Host "Admin credentials stored in user secrets for $Username."
     Write-Host 'Open http://localhost:5173/admin/login after starting the app.'
 }
