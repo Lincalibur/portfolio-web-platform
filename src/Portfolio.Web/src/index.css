@@ -18,6 +18,10 @@
   --radius-md: 10px;
   --radius-lg: 16px;
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(17, 24, 39, 0.72);
+  --glass-border: rgba(241, 245, 249, 0.08);
+  --matrix-green: #00ff66;
   --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-mono: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
 }
@@ -32,6 +36,17 @@ html,
 body,
 #root {
   margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
 }
 
@@ -164,7 +179,9 @@ pre code {
 
 .form-input {
   padding: 0.65rem 0.85rem;
-  background: var(--bg-deep);
+  background: rgba(10, 14, 23, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--text-primary);
@@ -191,6 +208,8 @@ pre code {
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   margin-bottom: 1rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .alert-error {
@@ -212,11 +231,13 @@ pre code {
 }
 
 .card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-elevated);
 }
 
 .badge {

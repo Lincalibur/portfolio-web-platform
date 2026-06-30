@@ -1,7 +1,9 @@
 .landing-page {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 211, 238, 0.12), transparent),
-    var(--bg-deep);
+  background: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(0, 255, 102, 0.06),
+    transparent 70%
+  );
 }
 
 .landing-hero {
