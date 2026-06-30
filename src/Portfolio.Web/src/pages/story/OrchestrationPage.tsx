@@ -72,6 +72,7 @@ export function OrchestrationPage() {
     <div className="gateway-page">
       <header className="block-header gateway-header">
         <div>
+          <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTlyMHdjeGRhZWVqajQwM3lqeHlqajV1YzJ2eXY3eWdibWM3OWxnNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VbDqmJbxaeYCoM92Ow/giphy.gif" alt="API Security" style={{ width: '100%', borderRadius: '12px', marginBottom: '1.5rem', display: 'block' }} />
           <span className="badge badge-muted">Block 03</span>
           <h1>API Gateway &amp; Security</h1>
           <p>

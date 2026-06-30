@@ -187,6 +187,7 @@ export function AutomationPage() {
   return (
     <div className="automation-page">
       <header className="block-header">
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGJsNHNibGw3OHhhYmUyZXRtY29tajBkZ3JqNmhiemxhOXFzMGU5YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MC6eSuC3yypCU/giphy.gif" alt="Automation" style={{ width: '100%', borderRadius: '12px', marginBottom: '1.5rem', display: 'block' }} />
         <span className="badge badge-muted">Block 04</span>
         <h1>{data.title}</h1>
         <p>{data.description}</p>

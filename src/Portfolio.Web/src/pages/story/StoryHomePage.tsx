@@ -182,6 +182,9 @@ export function StoryHomePage() {
             </Link>
           ))}
         </div>
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnVuNWhzcHlzOTN1Y3hzdzI1NGV1ZXhrbmVkaHE3MTdqZWg3Mm1kMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1CNsm9ZkHF0m4/giphy.gif" alt="Overview" style={{ width: '100%', borderRadius: '12px', display: 'block', margin: '0 auto' }} />
+        </div>
       </section>
     </div>
   );
