@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Portfolio.Api.Contracts;
+using Portfolio.Api.Http;
 using Portfolio.Api.Services;
 
 namespace Portfolio.Api.Extensions;
@@ -19,7 +20,9 @@ public static class EndpointRouteBuilderExtensions
                 health = "/health",
                 requestAccess = "POST /api/auth/request-access",
                 verify = "POST /api/auth/verify",
-                hostStats = "GET /api/host/stats (JWT required)"
+                hostStats = "GET /api/host/stats (JWT required)",
+                adminLogin = "POST /api/admin/login",
+                opsReport = "GET /api/ops/report (Admin JWT required)"
             }
         }))
             .WithName("Root")
@@ -84,6 +87,52 @@ public static class EndpointRouteBuilderExtensions
         })
             .RequireAuthorization()
             .WithTags("Host");
+
+        var traffic = app.MapGroup("/api/metrics/traffic")
+            .WithTags("Traffic")
+            .RequireRateLimiting("TrafficBeacon");
+
+        traffic.MapPost("/pageview", async Task<NoContent> (
+            HttpContext httpContext,
+            ITrafficLoggingService trafficLoggingService,
+            RecordTrafficRequest? request) =>
+        {
+            var region = RequestRegionResolver.ResolveRegion(httpContext);
+            var metricType = string.IsNullOrWhiteSpace(request?.MetricType) ? "PageView" : request.MetricType.Trim();
+            await trafficLoggingService.IncrementTrafficAsync(region, metricType, httpContext.RequestAborted);
+            return TypedResults.NoContent();
+        });
+
+        var admin = app.MapGroup("/api/admin")
+            .WithTags("Admin")
+            .RequireRateLimiting("AdminAuth");
+
+        admin.MapPost("/login", async Task<Results<Ok<AdminLoginResponse>, UnauthorizedHttpResult, ProblemHttpResult>> (
+            AdminLoginRequest request,
+            IAdminAuthService adminAuthService) =>
+        {
+            if (!adminAuthService.IsConfigured)
+            {
+                return TypedResults.Problem(
+                    "Admin portal is not configured. Set Admin credentials via user secrets.",
+                    statusCode: StatusCodes.Status503ServiceUnavailable);
+            }
+
+            var response = adminAuthService.Login(request);
+            return response is null
+                ? TypedResults.Unauthorized()
+                : TypedResults.Ok(response);
+        });
+
+        app.MapGet("/api/ops/report", async Task<Ok<OpsReportResponse>> (
+            IOpsReportService opsReportService,
+            CancellationToken cancellationToken) =>
+        {
+            var report = await opsReportService.GetReportAsync(cancellationToken);
+            return TypedResults.Ok(report);
+        })
+            .RequireAuthorization("AdminOnly")
+            .WithTags("Ops");
 
         return app;
     }

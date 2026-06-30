@@ -2,6 +2,8 @@ To achieve this exact filtering and auto-cleanup behavior, you will modify the l
 
 This keeps your database completely lean, ensuring you only see critical alerts when someone actively tests your site, while generic traffic numbers automatically discard themselves before taking up space.
 
+> **Status:** Implemented in `Portfolio.Api` (middleware, retention worker, `/api/ops/report`) and `Portfolio.Web` (`/admin/login`, `/admin` dashboard). Admin credentials are configured via user secrets — see [`howToRunGuide.md`](howToRunGuide.md) §4.5.
+
 Here is the updated step-by-step instructional guide to implement these filters on your backend.
 
 ---

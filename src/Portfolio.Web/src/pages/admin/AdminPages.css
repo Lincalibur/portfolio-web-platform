@@ -1,0 +1,112 @@
+.admin-shell {
+  min-height: 100vh;
+}
+
+.admin-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.admin-card {
+  max-width: 420px;
+  margin: 2rem auto 0;
+}
+
+.admin-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.admin-form input {
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.admin-error {
+  color: var(--danger);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.admin-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-section {
+  margin-bottom: 1rem;
+}
+
+.admin-section h2,
+.admin-section h3 {
+  margin-bottom: 0.75rem;
+}
+
+.admin-incident-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.admin-incident-time {
+  color: var(--text-muted);
+}
+
+.admin-incident-flag {
+  margin-right: 0.15rem;
+}
+
+.admin-summary-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .admin-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.admin-stat {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--accent);
+}
+
+.admin-stat-small {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.admin-footnote {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+}
