@@ -8,6 +8,7 @@ import { StoryHomePage } from '../pages/story/StoryHomePage';
 import { PipelinePage } from '../pages/story/PipelinePage';
 import { OrchestrationPage } from '../pages/story/OrchestrationPage';
 import { AutomationPage } from '../pages/story/AutomationPage';
+import { ContactPage } from '../pages/story/ContactPage';
 import { GuestRoute, AdminProtectedRoute, ProtectedRoute } from './ProtectedRoute';
 import { AdminLoginPage } from '../pages/admin/AdminLoginPage';
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
           { path: 'pipeline', element: <PipelinePage /> },
           { path: 'orchestration', element: <OrchestrationPage /> },
           { path: 'automation', element: <AutomationPage /> },
+          { path: 'contact', element: <ContactPage /> },
         ],
       },
     ],
