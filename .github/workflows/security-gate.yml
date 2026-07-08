@@ -18,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0 # Needed for comprehensive history secret scanning
 
       # --- Setup Project Environment ---
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v4.3.0
         with:
           dotnet-version: '8.0.x'
 
@@ -63,7 +63,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Security vulnerability detected. Checking for an existing open ticket..."
+          echo "Security vulnerability detected. Ensuring 'security' label exists..."
+          
+          # Force create the label if it doesn't exist (ignores error if it already exists)
+          gh label create "security" --color "d93f0b" --description "Security vulnerabilities and gate failures" --force
+          
+          echo "Checking for an existing open ticket..."
           
           # Search for an already open tracking issue for this gate
           EXISTING_ISSUE=$(gh issue list --search "Security Gate Failure: Development" --state open --json number --jq '.[0].number')
