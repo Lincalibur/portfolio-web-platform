@@ -56,9 +56,9 @@ jobs:
         id: run_sast
         continue-on-error: true
         run: |
-          echo "Running Semgrep against OWASP Top 10 Rulesets..."
-          # Updated to the correct active registry path
-          semgrep scan --config=p/owasp-top-10-2021 --error
+          echo "Running Semgrep Open-Source Security Scan..."
+          # Runs completely free, unauthenticated community rules locally
+          semgrep scan --config=auto --error
 
       # --- TRIAgE & LOOP LOGIC ---
       - name: Evaluate Results & Manage Issues
