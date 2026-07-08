@@ -57,7 +57,8 @@ jobs:
         continue-on-error: true
         run: |
           echo "Running Semgrep against OWASP Top 10 Rulesets..."
-          semgrep scan --config=p/owasp-top-10 --error
+          # Updated to the correct active registry path
+          semgrep scan --config=p/owasp-top-10-2021 --error
 
       # --- TRIAgE & LOOP LOGIC ---
       - name: Evaluate Results & Manage Issues
