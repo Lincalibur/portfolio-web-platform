@@ -157,6 +157,42 @@ SMTP not configured. OTP for user@example.com (Name): 123456 (development only)
 
 Watch the **API terminal** for the 6-digit code after submitting the gateway form.
 
+### 4.5 Admin portal (traffic & security reporting)
+
+Admin credentials are **never** committed. Configure them locally with **user secrets** or environment variables.
+
+**Option A — setup script (recommended on Windows):**
+
+```powershell
+# From repository root — choose your own username and password
+.\scripts\setup-admin.ps1 -Username "your-username" -Password "your-strong-password"
+```
+
+This stores credentials in **dotnet user secrets** and also writes `src/Portfolio.Api/appsettings.secrets.json` (gitignored) as a local backup. Restart the API after running the script.
+
+**Option B — manual user secrets:**
+
+```powershell
+cd src/Portfolio.Api
+dotnet user-secrets init
+dotnet user-secrets set "Admin:Username" "your-username"
+# Generate a hash (do not store plaintext passwords in config):
+dotnet run -- hash-admin-password "your-strong-password"
+dotnet user-secrets set "Admin:PasswordHash" "<paste-hash-output>"
+```
+
+**Option C — `appsettings.secrets.json` (gitignored):**
+
+Copy `src/Portfolio.Api/appsettings.secrets.json.example` to `appsettings.secrets.json`, fill in `Username` and `PasswordHash` only (never plaintext passwords).
+
+| Route | Purpose |
+| --- | --- |
+| http://localhost:5173/admin/login | Admin sign-in |
+| http://localhost:5173/admin | Ops dashboard (incidents + traffic summary) |
+| `GET /api/ops/report` | JSON report (requires Admin JWT) |
+
+Traffic logging behaviour is described in [`trafficLoggingImplementation.md`](trafficLoggingImplementation.md). Suspicious directory probes (e.g. `/.env`, `/wp-admin`) are logged as security incidents; normal page views increment ephemeral counters only. Logs older than `TrafficLogging:RetentionDays` (default 7) are purged nightly.
+
 ---
 
 ## 5. Build for production (frontend only)
@@ -258,6 +294,7 @@ Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.m
 | API health | http://localhost:5180/health |
 | Gateway | http://localhost:5173/gateway |
 | Story (after auth) | http://localhost:5173/story |
+| Admin portal | http://localhost:5173/admin/login |
 
 ---
 
@@ -268,4 +305,5 @@ Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.m
 | [`solutionDesign.md`](solutionDesign.md) | Architecture and security |
 | [`implementationPlan.md`](implementationPlan.md) | Feature delivery plan (F0–F9) |
 | [`Postman/README.md`](Postman/README.md) | API manual testing |
+| [`trafficLoggingImplementation.md`](trafficLoggingImplementation.md) | Traffic logging & admin ops dashboard |
 | [`../README.md`](../README.md) | Project overview |

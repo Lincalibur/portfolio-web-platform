@@ -57,6 +57,12 @@ const blocks = [
     title: 'Automation Hub',
     description: 'Script repository — reconnaissance and deployment demos.',
   },
+  {
+    to: '/story/contact',
+    num: '05',
+    title: 'Contact',
+    description: 'You made it to the end — reach out via email, cell, GitHub, or LinkedIn.',
+  },
 ];
 
 export function StoryHomePage() {

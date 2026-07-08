@@ -33,6 +33,32 @@ export interface HostStats {
   containerStatuses: string[];
 }
 
+export interface AdminLoginPayload {
+  username: string;
+  password: string;
+}
+
+export interface AdminLoginResult {
+  accessToken: string;
+  expiresAt: string;
+}
+
+export interface OpsIncident {
+  timestamp: string;
+  resourcePath: string;
+  severity: string;
+  status: string;
+  summary: string;
+}
+
+export interface OpsReport {
+  incidents: OpsIncident[];
+  totalCvDownloadsLast7Days: number;
+  activeTrafficHotspots: string[];
+  storageFootprintMb: number;
+  retentionDays: number;
+}
+
 export interface ValidationProblem {
   errors?: Record<string, string[]>;
   title?: string;
@@ -148,6 +174,17 @@ export async function getHostStats(token: string | null): Promise<HostStats> {
   }
 
   return response.json() as Promise<HostStats>;
+}
+
+export async function adminLogin(payload: AdminLoginPayload): Promise<AdminLoginResult> {
+  return request<AdminLoginResult>('/api/admin/login', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getOpsReport(token: string): Promise<OpsReport> {
+  return request<OpsReport>('/api/ops/report', {}, token);
 }
 
 export { ENABLE_INTERACTION_METRICS, USE_HOST_STATS_API };

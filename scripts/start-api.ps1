@@ -1,6 +1,8 @@
 $root = Split-Path $PSScriptRoot -Parent
 Set-Location (Join-Path $root 'src\Portfolio.Api')
 
+$env:ASPNETCORE_ENVIRONMENT = 'Development'
+
 Write-Host 'Starting Portfolio.Api...' -ForegroundColor Cyan
 Write-Host '  HTTP:  http://localhost:5180' -ForegroundColor DarkGray
 Write-Host '  HTTPS: https://localhost:7262' -ForegroundColor DarkGray

@@ -48,5 +48,15 @@
       "iconLight": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin.svg",
       "iconDark": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin-dark.svg"
     }
-  ]
+  ],
+  "contact": {
+    "finaleGif": "https://media.giphy.com/media/26BRv0ThflsHCqDrq/giphy.gif",
+    "headline": "That's a wrap!",
+    "subheadline": "You made it through the whole story — now let's talk.",
+    "prompt": "Contact me on one of these…",
+    "email": "lincalibur@gmail.com",
+    "cell": "+27 82 629 0478",
+    "github": "https://www.github.com/lincalibur",
+    "linkedin": "https://www.linkedin.com/in/liam-olivier-944929278/"
+  }
 }

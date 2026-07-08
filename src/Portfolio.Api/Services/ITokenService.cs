@@ -4,5 +4,5 @@ namespace Portfolio.Api.Services;
 
 public interface ITokenService
 {
-    (string Token, DateTime ExpiresAt) CreateAccessToken(ClaimsIdentity identity);
+    (string Token, DateTime ExpiresAt) CreateAccessToken(ClaimsIdentity identity, int? accessTokenMinutes = null);
 }

@@ -11,9 +11,10 @@ public class TokenService(IOptions<JwtSettings> jwtOptions) : ITokenService
 {
     private readonly JwtSettings _settings = jwtOptions.Value;
 
-    public (string Token, DateTime ExpiresAt) CreateAccessToken(ClaimsIdentity identity)
+    public (string Token, DateTime ExpiresAt) CreateAccessToken(ClaimsIdentity identity, int? accessTokenMinutes = null)
     {
-        var expiresAt = DateTime.UtcNow.AddMinutes(_settings.AccessTokenMinutes);
+        var minutes = accessTokenMinutes ?? _settings.AccessTokenMinutes;
+        var expiresAt = DateTime.UtcNow.AddMinutes(minutes);
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SigningKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
