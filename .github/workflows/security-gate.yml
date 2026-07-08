@@ -48,13 +48,16 @@ jobs:
           extra_args: --only-verified
 
       # --- SCAN 3: Static Application Security Testing (A01/A03) ---
+      - name: Install Semgrep
+        run: |
+          python3 -m pip install semgrep
+
       - name: Run Semgrep SAST
         id: run_sast
         continue-on-error: true
         run: |
           echo "Running Semgrep against OWASP Top 10 Rulesets..."
-          # Running via docker/npx standard execution for ease of setup
-          npx semgrep --config=p/owasp-top-10 --error
+          semgrep scan --config=p/owasp-top-10 --error
 
       # --- TRIAgE & LOOP LOGIC ---
       - name: Evaluate Results & Manage Issues
