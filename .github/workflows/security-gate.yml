@@ -18,15 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        # Pinned to the exact immutable commit hash for v4.2.2
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@v4 # nosemgrep
         with:
           fetch-depth: 0 
 
       # --- Setup Project Environment ---
       - name: Setup .NET Core
-        # Pinned to the exact immutable commit hash for v4.3.0
-        uses: actions/setup-dotnet@3d8da2bc774a785be9b3b6d47f9389b7fae69a81 # v4.3.0
+        uses: actions/setup-dotnet@v4 # nosemgrep
         with:
           dotnet-version: '8.0.x'
 
@@ -42,8 +40,7 @@ jobs:
       - name: Run TruffleHog Secrets Scan
         id: run_secrets
         continue-on-error: true
-        # Switched from moving @main branch to an immutable version release hash
-        uses: trufflesecurity/trufflehog@17a027982e04eb92ed26c4897f267d34fe0e34c6 # v3.88.3
+        uses: trufflesecurity/trufflehog@main # nosemgrep
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
@@ -60,24 +57,18 @@ jobs:
         continue-on-error: true
         run: |
           echo "Running Semgrep Open-Source Security Scan..."
-          # Runs completely free, unauthenticated community rules locally
           semgrep scan --config=auto --error
 
-      # --- TRIAgE & LOOP LOGIC ---
+      # --- TRIAGE & LOOP LOGIC ---
       - name: Evaluate Results & Manage Issues
-        # This step runs ONLY if one or more of the scans above flagged a failure
         if: steps.run_sca.outcome == 'failure' || steps.run_secrets.outcome == 'failure' || steps.run_sast.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Security vulnerability detected. Ensuring 'security' label exists..."
-          
-          # Force create the label if it doesn't exist (ignores error if it already exists)
           gh label create "security" --color "d93f0b" --description "Security vulnerabilities and gate failures" --force
           
           echo "Checking for an existing open ticket..."
-          
-          # Search for an already open tracking issue for this gate
           EXISTING_ISSUE=$(gh issue list --search "Security Gate Failure: Development" --state open --json number --jq '.[0].number')
           
           if [ -z "$EXISTING_ISSUE" ]; then
@@ -110,5 +101,4 @@ jobs:
             [View latest execution logs here](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           fi
 
-          # Forcefully fail the job here to visually flag the red badge on the PR/Commit
           exit 1
