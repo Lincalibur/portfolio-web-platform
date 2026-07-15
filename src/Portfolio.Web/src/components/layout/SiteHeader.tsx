@@ -12,9 +12,9 @@ export function SiteHeader({ children }: SiteHeaderProps) {
       <div className="container site-header__inner">
         <Link to="/" className="site-header__brand">
           <span className="site-header__logo" aria-hidden="true">
-            ◈
+            ▣
           </span>
-          Interactive Resume
+          RESUME.SYS
         </Link>
         {children}
       </div>

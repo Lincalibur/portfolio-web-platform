@@ -68,7 +68,7 @@
 .automation-highlights li {
   font-size: 0.75rem;
   padding: 0.25rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: var(--bg-deep);
   border: 1px solid var(--border);
   color: var(--text-muted);
@@ -178,10 +178,10 @@
 }
 
 .terminal--running {
-  border-color: rgba(34, 211, 238, 0.45);
+  border-color: rgba(0, 240, 255, 0.45);
   box-shadow:
-    0 0 0 1px rgba(34, 211, 238, 0.12),
-    0 0 24px rgba(34, 211, 238, 0.12);
+    0 0 0 1px rgba(0, 240, 255, 0.12),
+    0 0 24px rgba(0, 240, 255, 0.12);
 }
 
 .terminal--finale-success {
@@ -217,8 +217,8 @@
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(34, 211, 238, 0.05) 20%,
-    rgba(34, 211, 238, 0.35) 50%,
+    rgba(0, 240, 255, 0.05) 20%,
+    rgba(0, 240, 255, 0.35) 50%,
     rgba(52, 211, 153, 0.15) 80%,
     transparent 100%
   );
@@ -296,7 +296,7 @@
 }
 
 .terminal__line--accent {
-  color: #22d3ee;
+  color: var(--accent-cyan);
 }
 
 .terminal__line--default {
@@ -308,8 +308,8 @@
 .terminal__line--finale {
   font-size: 0.72rem;
   line-height: 1.35;
-  color: #22d3ee;
-  text-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+  color: var(--accent-cyan);
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
 }
 
 .terminal__line--tree {
