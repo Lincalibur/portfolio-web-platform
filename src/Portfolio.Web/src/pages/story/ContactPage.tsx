@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { assetUrl } from '../../utils/assetUrl';
 import './ContactPage.css';
 
 interface ContactData {
@@ -63,7 +64,7 @@ export function ContactPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/fixtures/profile.json')
+    fetch(assetUrl('/fixtures/profile.json'))
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load contact details');
         return res.json() as Promise<ProfileFixture>;

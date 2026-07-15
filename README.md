@@ -105,7 +105,45 @@ Run both API and SPA together for the full auth flow. In Development, OTP codes 
 
 ---
 
+## Deploy frontend on GitHub Pages
+
+GitHub Pages can host the **static React SPA** only — not the ASP.NET API. The Pages build enables a **static demo** (mock OTP `000000`, fixture-backed story blocks). Admin / live metrics still need Docker or a local API.
+
+### One-time setup on GitHub
+
+1. Push these changes to `development` or `main`.
+2. Open the repo → **Settings** → **Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. Wait for the **Deploy GitHub Pages** workflow (`.github/workflows/deploy-github-pages.yml`) to succeed.
+
+Site URL (project pages):
+
+`https://<your-github-username>.github.io/portfolio-web-platform/`
+
+Example for this repo: `https://lincalibur.github.io/portfolio-web-platform/`
+
+### Try the demo on Pages
+
+1. Open the site URL above.
+2. **Enter the gateway** → submit name + email (validation / SQL-block UI still runs).
+3. On verify, enter OTP **`000000`** (no email is sent).
+4. Explore `/story/*` with baked-in fixtures.
+
+### Preview the Pages build locally
+
+```powershell
+cd src/Portfolio.Web
+$env:BASE_PATH="/portfolio-web-platform/"
+$env:VITE_STATIC_DEMO="true"
+npm run build
+npm run preview
+```
+
+---
+
 ## Deployment (Debian + Docker)
+
+Full stack (API + SPA + OTP + admin) still uses Docker on a host:
 
 ```bash
 docker compose up -d --build
@@ -119,7 +157,7 @@ Use a `.env` file (from `.env.example`) for `Jwt__SigningKey`, `Smtp__*`, and da
 
 | Document | Purpose |
 | --- | --- |
-| [`Docs/howToRunGuide.md`](Docs/howToRunGuide.md) | **Local setup** — prerequisites, run API + SPA, auth flow, troubleshooting |
+| [`Docs/howToRunGuide.md`](Docs/howToRunGuide.md) | **Local setup** + **GitHub Pages** static demo |
 | [`Docs/solutionDesign.md`](Docs/solutionDesign.md) | Architecture, security, Docker layout |
 | [`Docs/implementationPlan.md`](Docs/implementationPlan.md) | **Feature-by-feature** build plan (F0–F9), gated endpoints, fixture-based UI testing |
 | [`Docs/Postman/`](Docs/Postman/) | Postman collection + local environment (keep in sync with API changes) |

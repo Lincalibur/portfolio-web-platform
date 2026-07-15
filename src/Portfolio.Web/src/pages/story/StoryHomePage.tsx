@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TypingHeadline } from '../../components/profile/TypingHeadline';
+import { assetUrl } from '../../utils/assetUrl';
 import './StoryHomePage.css';
 
 interface ProfileHighlight {
@@ -70,7 +71,7 @@ export function StoryHomePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/fixtures/profile.json')
+    fetch(assetUrl('/fixtures/profile.json'))
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load profile');
         return res.json() as Promise<ProfileData>;
