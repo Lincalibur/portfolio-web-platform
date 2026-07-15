@@ -2,6 +2,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body.portfolio-booting {
+  overflow: hidden;
+}
+
 .portfolio-page {
   background: radial-gradient(
     ellipse 70% 40% at 50% -10%,
@@ -9,15 +13,23 @@ html {
     transparent 60%
   );
   opacity: 0;
-  transition: opacity 0.7s ease;
+  visibility: hidden;
+  transition:
+    opacity 0.75s ease,
+    visibility 0s linear 0.75s;
 }
 
 .portfolio-page--ready {
   opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.75s ease,
+    visibility 0s;
 }
 
 .portfolio-page--booting {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
@@ -58,27 +70,30 @@ html {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 4rem;
 }
 
 .portfolio-section {
   scroll-margin-top: 88px;
   transition:
-    opacity 0.55s ease,
-    filter 0.55s ease,
-    transform 0.55s ease;
+    opacity 0.45s ease,
+    filter 0.45s ease,
+    transform 0.45s ease;
+  will-change: opacity, filter, transform;
 }
 
 .portfolio-section--active {
   opacity: 1;
   filter: none;
   transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 .portfolio-section--dim {
-  opacity: 0.22;
-  filter: blur(1.2px) saturate(0.7);
-  transform: translateY(8px) scale(0.985);
+  opacity: 0.12;
+  filter: blur(2px) brightness(0.55) saturate(0.45);
+  transform: translateY(14px) scale(0.97);
+  pointer-events: none;
 }
 
 .portfolio-hero {
@@ -169,9 +184,12 @@ html {
     scroll-behavior: auto;
   }
 
-  .portfolio-page {
+  .portfolio-page,
+  .portfolio-page--ready,
+  .portfolio-page--booting {
     transition: none;
     opacity: 1;
+    visibility: visible;
   }
 
   .portfolio-section {
@@ -181,7 +199,8 @@ html {
   .portfolio-section--dim {
     filter: none;
     transform: none;
-    opacity: 0.55;
+    opacity: 0.35;
+    pointer-events: auto;
   }
 
   .portfolio-hero__prompt::after {
@@ -201,7 +220,7 @@ html {
   }
 
   .portfolio-section--dim {
-    opacity: 0.3;
-    filter: blur(0.6px);
+    opacity: 0.16;
+    filter: blur(1.2px) brightness(0.6);
   }
 }

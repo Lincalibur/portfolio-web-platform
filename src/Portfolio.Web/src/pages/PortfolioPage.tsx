@@ -28,12 +28,17 @@ function scrollToSection(id: string) {
 export function PortfolioPage() {
   const [activeId, setActiveId] = useState<string>('hero');
   const [bootComplete, setBootComplete] = useState(() => shouldSkipBootIntro());
-  const [contentReady, setContentReady] = useState(() => shouldSkipBootIntro());
 
   const handleBootComplete = useCallback(() => {
     setBootComplete(true);
-    window.requestAnimationFrame(() => setContentReady(true));
   }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('portfolio-booting', !bootComplete);
+    return () => {
+      document.body.classList.remove('portfolio-booting');
+    };
+  }, [bootComplete]);
 
   useEffect(() => {
     if (!bootComplete) {
@@ -68,7 +73,11 @@ export function PortfolioPage() {
           setActiveId(visible[0].target.id);
         }
       },
-      { rootMargin: '-35% 0px -45% 0px', threshold: [0.15, 0.4, 0.65] },
+      {
+        // Middle band of the viewport = "in focus"
+        rootMargin: '-28% 0px -42% 0px',
+        threshold: [0.1, 0.25, 0.5, 0.75],
+      },
     );
 
     nodes.forEach((node) => observer.observe(node));
@@ -80,7 +89,8 @@ export function PortfolioPage() {
       {!bootComplete && <BootIntro onComplete={handleBootComplete} />}
 
       <div
-        className={`page portfolio-page${contentReady ? ' portfolio-page--ready' : ' portfolio-page--booting'}`}
+        className={`page portfolio-page${bootComplete ? ' portfolio-page--ready' : ' portfolio-page--booting'}`}
+        aria-hidden={!bootComplete}
       >
         <SiteHeader>
           <nav className="portfolio-nav" aria-label="Page sections">
@@ -101,7 +111,7 @@ export function PortfolioPage() {
           <div className="portfolio-stream">
             <section
               id="hero"
-              className={`portfolio-section portfolio-section--hero${activeId === 'hero' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+              className={`portfolio-section${activeId === 'hero' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
               <div className="portfolio-hero card">
                 <p className="portfolio-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>

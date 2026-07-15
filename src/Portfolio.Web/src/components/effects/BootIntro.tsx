@@ -11,15 +11,13 @@ interface TypeChunk {
   pauseMs?: number;
   /** Newline after chunk. */
   newline?: boolean;
-  /** Dim “system” tone. */
-  dim?: boolean;
 }
 
 const SCRIPT: TypeChunk[] = [
-  { text: 'root@portfolio:~$ ', dim: true },
+  { text: 'root@portfolio:~$ ' },
   { text: 'boot', pauseMs: 180 },
   { text: ' resume.sys', pauseMs: 420, newline: true },
-  { text: 'root@portfolio:~$ ', dim: true },
+  { text: 'root@portfolio:~$ ' },
   { text: 'load', pauseMs: 160 },
   { text: ' --profile', pauseMs: 220 },
   { text: ' liam_olivier', pauseMs: 480, newline: true },
@@ -27,10 +25,10 @@ const SCRIPT: TypeChunk[] = [
   { text: ' phosphor grid online', pauseMs: 360, newline: true },
   { text: '[OK]', pauseMs: 140 },
   { text: ' matrix rain linked', pauseMs: 360, newline: true },
-  { text: 'root@portfolio:~$ ', dim: true },
+  { text: 'root@portfolio:~$ ' },
   { text: 'open', pauseMs: 180 },
   { text: ' interactive_resume', pauseMs: 520, newline: true },
-  { text: '>>', dim: true, pauseMs: 200 },
+  { text: '>>', pauseMs: 200 },
   { text: ' ready.', pauseMs: 640 },
 ];
 
@@ -76,6 +74,8 @@ export function BootIntro({ onComplete }: BootIntroProps) {
   const [typed, setTyped] = useState('');
   const [caretOn, setCaretOn] = useState(true);
   const finishedRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   function finish() {
     if (finishedRef.current) {
@@ -84,7 +84,7 @@ export function BootIntro({ onComplete }: BootIntroProps) {
     finishedRef.current = true;
     markBootIntroSeen();
     setPhase('done');
-    onComplete();
+    onCompleteRef.current();
   }
 
   useEffect(() => {
@@ -104,18 +104,8 @@ export function BootIntro({ onComplete }: BootIntroProps) {
       return;
     }
 
-    let cancelled = false;
-
-    (async () => {
-      await sleep(550);
-      if (!cancelled) {
-        setPhase('rain');
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
+    const id = window.setTimeout(() => setPhase('rain'), 550);
+    return () => window.clearTimeout(id);
   }, [phase]);
 
   useEffect(() => {
@@ -123,18 +113,8 @@ export function BootIntro({ onComplete }: BootIntroProps) {
       return;
     }
 
-    let cancelled = false;
-
-    (async () => {
-      await sleep(1600);
-      if (!cancelled) {
-        setPhase('typing');
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
+    const id = window.setTimeout(() => setPhase('typing'), 1600);
+    return () => window.clearTimeout(id);
   }, [phase]);
 
   useEffect(() => {
@@ -160,7 +140,6 @@ export function BootIntro({ onComplete }: BootIntroProps) {
           output += char;
           setTyped(output);
 
-          // Slightly slower on spaces / punctuation for a natural CLI feel.
           const base = char === ' ' ? 55 : /[.:_]/.test(char) ? 70 : 28;
           const jitter = Math.floor(Math.random() * 28);
           await sleep(base + jitter);
@@ -174,22 +153,27 @@ export function BootIntro({ onComplete }: BootIntroProps) {
         await sleep(chunk.pauseMs ?? 90);
       }
 
-      if (cancelled) {
-        return;
-      }
-
-      await sleep(500);
-      setPhase('exit');
-      await sleep(700);
-
       if (!cancelled) {
-        finish();
+        // Move to exit in a separate effect so cleanup here cannot block finish().
+        setPhase('exit');
       }
     })();
 
     return () => {
       cancelled = true;
     };
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'exit') {
+      return;
+    }
+
+    const id = window.setTimeout(() => {
+      finish();
+    }, 700);
+
+    return () => window.clearTimeout(id);
   }, [phase]);
 
   if (phase === 'done') {
