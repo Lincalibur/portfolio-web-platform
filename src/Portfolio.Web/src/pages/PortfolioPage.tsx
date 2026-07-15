@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { BootIntro, shouldSkipBootIntro } from '../components/effects/BootIntro';
 import { VectorIcon } from '../components/icons/VectorIcon';
 import { SiteHeader } from '../components/layout/SiteHeader';
 import { AutomationPage } from './story/AutomationPage';
@@ -10,6 +11,7 @@ import './PortfolioPage.css';
 import '../components/icons/VectorIcon.css';
 
 const sections = [
+  { id: 'hero', label: 'Intro' },
   { id: 'overview', label: 'Overview' },
   { id: 'pipeline', label: 'Pipeline' },
   { id: 'security', label: 'API Security' },
@@ -25,17 +27,32 @@ function scrollToSection(id: string) {
 
 export function PortfolioPage() {
   const [activeId, setActiveId] = useState<string>('hero');
+  const [bootComplete, setBootComplete] = useState(() => shouldSkipBootIntro());
+  const [contentReady, setContentReady] = useState(() => shouldSkipBootIntro());
+
+  const handleBootComplete = useCallback(() => {
+    setBootComplete(true);
+    window.requestAnimationFrame(() => setContentReady(true));
+  }, []);
 
   useEffect(() => {
+    if (!bootComplete) {
+      return;
+    }
+
     const hash = window.location.hash.replace(/^#/, '');
     if (hash) {
       window.requestAnimationFrame(() => scrollToSection(hash));
     }
-  }, []);
+  }, [bootComplete]);
 
   useEffect(() => {
-    const nodes = ['hero', ...sections.map((s) => s.id)]
-      .map((id) => document.getElementById(id))
+    if (!bootComplete) {
+      return;
+    }
+
+    const nodes = sections
+      .map((section) => document.getElementById(section.id))
       .filter((node): node is HTMLElement => node !== null);
 
     if (nodes.length === 0) {
@@ -51,110 +68,117 @@ export function PortfolioPage() {
           setActiveId(visible[0].target.id);
         }
       },
-      { rootMargin: '-30% 0px -55% 0px', threshold: [0.1, 0.35, 0.6] },
+      { rootMargin: '-35% 0px -45% 0px', threshold: [0.15, 0.4, 0.65] },
     );
 
     nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, []);
+  }, [bootComplete]);
 
   return (
-    <div className="page portfolio-page">
-      <SiteHeader>
-        <nav className="portfolio-nav" aria-label="Page sections">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              className={`portfolio-nav__link${activeId === section.id ? ' portfolio-nav__link--active' : ''}`}
-              onClick={() => scrollToSection(section.id)}
-            >
-              {section.label}
-            </button>
-          ))}
-        </nav>
-      </SiteHeader>
+    <>
+      {!bootComplete && <BootIntro onComplete={handleBootComplete} />}
 
-      <div className="portfolio-body container">
-        <aside className="portfolio-rail card" aria-label="Jump to section">
-          <p className="portfolio-rail__label">Scroll story</p>
-          <button
-            type="button"
-            className={`portfolio-rail__link${activeId === 'hero' ? ' portfolio-rail__link--active' : ''}`}
-            onClick={() => scrollToSection('hero')}
-          >
-            Intro
-          </button>
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              type="button"
-              className={`portfolio-rail__link${activeId === section.id ? ' portfolio-rail__link--active' : ''}`}
-              onClick={() => scrollToSection(section.id)}
-            >
-              {section.label}
-            </button>
-          ))}
-        </aside>
+      <div
+        className={`page portfolio-page${contentReady ? ' portfolio-page--ready' : ' portfolio-page--booting'}`}
+      >
+        <SiteHeader>
+          <nav className="portfolio-nav" aria-label="Page sections">
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                type="button"
+                className={`portfolio-nav__link${activeId === section.id ? ' portfolio-nav__link--active' : ''}`}
+                onClick={() => scrollToSection(section.id)}
+              >
+                {section.label}
+              </button>
+            ))}
+          </nav>
+        </SiteHeader>
 
-        <div className="portfolio-stream">
-          <section id="hero" className="portfolio-section portfolio-section--hero">
-            <div className="portfolio-hero card">
-              <p className="portfolio-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>
-              <h1>INTERACTIVE RESUME</h1>
-              <p className="portfolio-hero__prompt">
-                root@portfolio:~$ <span>scroll_to_explore</span>
-              </p>
-              <p className="portfolio-hero__lead">
-                Liam Olivier — software developer with a newly earned{' '}
-                <strong>Bachelor of Computing</strong>, focused on{' '}
-                <strong>Fintech solutions in C#</strong> and hands-on experience building{' '}
-                <strong>API security tooling</strong>. One continuous story below — no gate, no
-                signup.
-              </p>
-              <ul className="portfolio-hero__creds">
-                <li>Bachelor of Computing</li>
-                <li>Fintech &amp; enterprise C# development</li>
-                <li>API hardening, rate limiting &amp; payload filtering</li>
-              </ul>
-              <div className="portfolio-hero__actions">
-                <button type="button" className="btn btn-primary" onClick={() => scrollToSection('overview')}>
-                  Start scrolling
-                  <VectorIcon name="arrow-down" />
-                </button>
-                <a
-                  href="https://www.github.com/lincalibur"
-                  className="btn btn-secondary"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View GitHub
-                </a>
+        <div className="portfolio-body container">
+          <div className="portfolio-stream">
+            <section
+              id="hero"
+              className={`portfolio-section portfolio-section--hero${activeId === 'hero' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+            >
+              <div className="portfolio-hero card">
+                <p className="portfolio-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>
+                <h1>INTERACTIVE RESUME</h1>
+                <p className="portfolio-hero__prompt">
+                  root@portfolio:~$ <span>scroll_to_explore</span>
+                </p>
+                <p className="portfolio-hero__lead">
+                  Liam Olivier — software developer with a newly earned{' '}
+                  <strong>Bachelor of Computing</strong>, focused on{' '}
+                  <strong>Fintech solutions in C#</strong> and hands-on experience building{' '}
+                  <strong>API security tooling</strong>. One continuous story below — no gate, no
+                  signup.
+                </p>
+                <ul className="portfolio-hero__creds">
+                  <li>Bachelor of Computing</li>
+                  <li>Fintech &amp; enterprise C# development</li>
+                  <li>API hardening, rate limiting &amp; payload filtering</li>
+                </ul>
+                <div className="portfolio-hero__actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => scrollToSection('overview')}
+                  >
+                    Start scrolling
+                    <VectorIcon name="arrow-down" />
+                  </button>
+                  <a
+                    href="https://www.github.com/lincalibur"
+                    className="btn btn-secondary"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View GitHub
+                  </a>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <section id="overview" className="portfolio-section">
-            <StoryHomePage />
-          </section>
+            <section
+              id="overview"
+              className={`portfolio-section${activeId === 'overview' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+            >
+              <StoryHomePage />
+            </section>
 
-          <section id="pipeline" className="portfolio-section">
-            <PipelinePage />
-          </section>
+            <section
+              id="pipeline"
+              className={`portfolio-section${activeId === 'pipeline' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+            >
+              <PipelinePage />
+            </section>
 
-          <section id="security" className="portfolio-section">
-            <OrchestrationPage />
-          </section>
+            <section
+              id="security"
+              className={`portfolio-section${activeId === 'security' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+            >
+              <OrchestrationPage />
+            </section>
 
-          <section id="automation" className="portfolio-section">
-            <AutomationPage />
-          </section>
+            <section
+              id="automation"
+              className={`portfolio-section${activeId === 'automation' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+            >
+              <AutomationPage />
+            </section>
 
-          <section id="contact" className="portfolio-section">
-            <ContactPage />
-          </section>
+            <section
+              id="contact"
+              className={`portfolio-section${activeId === 'contact' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
+            >
+              <ContactPage />
+            </section>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
