@@ -285,7 +285,7 @@ GitHub Pages **cannot run** `Portfolio.Api`. The workflow [`.github/workflows/de
 
 ### Enable Pages once
 
-1. Push to `development` or `main` (or run **Actions** → **Deploy GitHub Pages** → **Run workflow**). The workflow builds the SPA and pushes it to the `gh-pages` branch.
+1. Merge SPA changes into **`main`** (or run **Actions** → **Deploy GitHub Pages** → **Run workflow** on `main`). Feature / `development` pushes do **not** publish. The workflow builds the SPA and pushes it to the `gh-pages` branch.
 2. Repo → **Settings** → **Pages**:
    - **Source:** Deploy from a branch
    - **Branch:** `gh-pages` / `/` (root) → **Save**
