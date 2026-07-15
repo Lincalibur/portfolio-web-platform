@@ -285,11 +285,9 @@ GitHub Pages **cannot run** `Portfolio.Api`. The workflow [`.github/workflows/de
 
 ### Enable Pages once
 
-1. Merge SPA changes into **`main`** (or run **Actions** → **Deploy GitHub Pages** → **Run workflow** on `main`). Feature / `development` pushes do **not** publish. The workflow builds the SPA and pushes it to the `gh-pages` branch.
-2. Repo → **Settings** → **Pages**:
-   - **Source:** Deploy from a branch
-   - **Branch:** `gh-pages` / `/` (root) → **Save**
-3. Do **not** use `main`/`development` as the Pages branch — that publishes the README, not the Vite app.
+1. Merge SPA changes into **`main`** (or run **Actions** → **Deploy GitHub Pages** → **Run workflow** on `main`). Feature / `development` pushes do **not** publish.
+2. Repo → **Settings** → **Pages** → **Source:** **GitHub Actions**.
+3. If deploy hangs on `purging_cdn` / times out after ~10 minutes, that is a known GitHub CDN issue (not your code). Re-run the workflow later. The OWASP security gate on `development` is unrelated to Pages.
 4. Open `https://<owner>.github.io/<repo>/` (e.g. `https://lincalibur.github.io/portfolio-web-platform/`).
 
 ### Demo OTP on Pages
