@@ -1,0 +1,62 @@
+{
+  "heroGif": "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2JwdmRkemtxdHRuNnhxMjRwbXEzNTdoZG51Z2dseDZiaWVmbWQ5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JqmupuTVZYaQX5s094/giphy.gif",
+  "waveGif": "https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif",
+  "typingLines": [
+    "Hi! I'm Liam Olivier.",
+    "Bachelor of Computing",
+    "Fintech · C# · API Security"
+  ],
+  "quote": "Intelligence without ambition is a bird without wings.",
+  "quoteAuthor": "Salvador Dalí",
+  "bio": "I'm Liam Olivier, a software developer with a Bachelor of Computing, focused on Fintech solutions in C# and building API security tooling. I combine strong engineering fundamentals with hands-on DevOps and security practice.",
+  "highlights": [
+    { "icon": "🎓", "label": "Education", "text": "Bachelor of Computing — recently completed." },
+    { "icon": "💳", "label": "Focus", "text": "Fintech development with C# and enterprise APIs." },
+    { "icon": "🛡️", "label": "Security", "text": "API hardening tools — rate limiting, token validation, payload filtering." },
+    { "icon": "🌍", "text": "Based in Western Cape, South Africa." },
+    { "icon": "🤝", "label": "Open for", "text": "Collaborations on Open Source security tools or DevOps automation." }
+  ],
+  "skillGroups": [
+    {
+      "title": "Languages & Frameworks",
+      "skills": [
+        { "name": "Python", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/python-colored.svg" },
+        { "name": "C#", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/csharp-colored.svg" },
+        { "name": "FastAPI", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/fastapi-colored.svg" },
+        { "name": "PyTorch", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/pytorch-colored.svg" }
+      ]
+    },
+    {
+      "title": "DevOps & Tools",
+      "skills": [
+        { "name": "Docker", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/docker-colored.svg" },
+        { "name": "Git", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/git-colored.svg" },
+        { "name": "Arduino", "icon": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/arduino-colored.svg" }
+      ]
+    }
+  ],
+  "socials": [
+    {
+      "name": "GitHub",
+      "url": "https://www.github.com/lincalibur",
+      "iconLight": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/github.svg",
+      "iconDark": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/github-dark.svg"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/liam-olivier-944929278/",
+      "iconLight": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin.svg",
+      "iconDark": "https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin-dark.svg"
+    }
+  ],
+  "contact": {
+    "finaleGif": "https://media.giphy.com/media/26BRv0ThflsHCqDrq/giphy.gif",
+    "headline": "That's a wrap!",
+    "subheadline": "You made it through the whole story — now let's talk.",
+    "prompt": "Contact me on one of these…",
+    "email": "lincalibur@gmail.com",
+    "cell": "+27 82 629 0478",
+    "github": "https://www.github.com/lincalibur",
+    "linkedin": "https://www.linkedin.com/in/liam-olivier-944929278/"
+  }
+}
