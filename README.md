@@ -112,9 +112,12 @@ GitHub Pages can host the **static React SPA** only — not the ASP.NET API. The
 ### One-time setup on GitHub
 
 1. Push these changes to `development` or `main`.
-2. Open the repo → **Settings** → **Pages**.
-3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-4. Wait for the **Deploy GitHub Pages** workflow (`.github/workflows/deploy-github-pages.yml`) to succeed.
+2. Wait for the **Deploy GitHub Pages** workflow to finish (it publishes the built SPA to the `gh-pages` branch).
+3. Open the repo → **Settings** → **Pages**.
+4. Under **Build and deployment**:
+   - **Source:** Deploy from a branch
+   - **Branch:** `gh-pages` / `/` (root) → **Save**
+5. Do **not** point Pages at `main` or `development` — that serves the repo README instead of the app.
 
 Site URL (project pages):
 

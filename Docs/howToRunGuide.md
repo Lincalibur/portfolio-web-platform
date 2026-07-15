@@ -285,9 +285,12 @@ GitHub Pages **cannot run** `Portfolio.Api`. The workflow [`.github/workflows/de
 
 ### Enable Pages once
 
-1. Repo → **Settings** → **Pages** → **Source**: **GitHub Actions**.
-2. Push to `development` or `main` (or run the workflow via **Actions** → **Deploy GitHub Pages** → **Run workflow**).
-3. Open `https://<owner>.github.io/<repo>/` (e.g. `https://lincalibur.github.io/portfolio-web-platform/`).
+1. Push to `development` or `main` (or run **Actions** → **Deploy GitHub Pages** → **Run workflow**). The workflow builds the SPA and pushes it to the `gh-pages` branch.
+2. Repo → **Settings** → **Pages**:
+   - **Source:** Deploy from a branch
+   - **Branch:** `gh-pages` / `/` (root) → **Save**
+3. Do **not** use `main`/`development` as the Pages branch — that publishes the README, not the Vite app.
+4. Open `https://<owner>.github.io/<repo>/` (e.g. `https://lincalibur.github.io/portfolio-web-platform/`).
 
 ### Demo OTP on Pages
 
