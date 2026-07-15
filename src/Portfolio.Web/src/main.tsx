@@ -8,6 +8,7 @@ import './index.css';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <MatrixBackground />
+    <div className="crt-overlay" aria-hidden="true" />
     <div className="app-shell">
       <RouterProvider router={router} />
     </div>

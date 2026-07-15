@@ -100,7 +100,7 @@
 }
 
 .gateway-node__status--shield {
-  background: rgba(34, 211, 238, 0.15);
+  background: rgba(0, 255, 102, 0.15);
   color: var(--accent);
 }
 
