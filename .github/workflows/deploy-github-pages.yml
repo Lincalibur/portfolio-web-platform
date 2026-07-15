@@ -1,7 +1,8 @@
 name: Deploy GitHub Pages
 
-# Publishes the static SPA (Portfolio.Web) only — ASP.NET API cannot run on GitHub Pages.
-# After the first successful run: Settings → Pages → Source = GitHub Actions.
+# Builds Portfolio.Web and publishes dist/ to the gh-pages branch.
+# GitHub Pages must use: Settings → Pages → Deploy from a branch → gh-pages / / (root)
+# Do NOT point Pages at main/development (that serves the README, not the SPA).
 
 on:
   push:
@@ -14,21 +15,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build static SPA
+  build-and-deploy:
+    name: Build and deploy SPA
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/Portfolio.Web
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,9 +37,11 @@ jobs:
           cache-dependency-path: src/Portfolio.Web/package-lock.json
 
       - name: Install dependencies
+        working-directory: src/Portfolio.Web
         run: npm ci
 
       - name: Build for GitHub Pages
+        working-directory: src/Portfolio.Web
         env:
           # Project site URL: https://<owner>.github.io/<repo>/
           BASE_PATH: /${{ github.event.repository.name }}/
@@ -54,22 +52,16 @@ jobs:
         run: npm run build
 
       - name: SPA fallback for deep links
+        working-directory: src/Portfolio.Web
         # GitHub Pages serves 404.html for unknown paths; copy index so client routing works.
         run: cp dist/index.html dist/404.html
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: src/Portfolio.Web/dist
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./src/Portfolio.Web/dist
+          force_orphan: true
+          # Avoid committing a redundant commit message footer from the action when empty
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
