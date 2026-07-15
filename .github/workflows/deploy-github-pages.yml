@@ -1,13 +1,13 @@
 name: Deploy GitHub Pages
 
-# Builds Portfolio.Web and publishes dist/ to the gh-pages branch.
+# Builds Portfolio.Web from main only and publishes dist/ to the gh-pages branch.
+# Feature / development branches do not deploy — merge to main to update the site.
 # GitHub Pages must use: Settings → Pages → Deploy from a branch → gh-pages / / (root)
 # Do NOT point Pages at main/development (that serves the README, not the SPA).
 
 on:
   push:
     branches:
-      - development
       - main
     paths:
       - 'src/Portfolio.Web/**'

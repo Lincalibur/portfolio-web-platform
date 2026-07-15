@@ -4,12 +4,13 @@ import './MatrixBackground.css';
 const GLYPHS =
   'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const GLYPH_POOL = GLYPHS.split('');
-const FONT_SIZE = 15;
-const FRAME_INTERVAL_MS = 33;
-const TRAIL_ALPHA = 0.07;
-const BG_RGB = '10, 14, 23';
-const MATRIX_GREEN = '#00ff66';
-const MATRIX_GREEN_DIM = 'rgba(0, 255, 102, 0.35)';
+const FONT_SIZE = 16;
+const FRAME_INTERVAL_MS = 36;
+const TRAIL_ALPHA = 0.085;
+const BG_RGB = '0, 0, 0';
+const MATRIX_GREEN = '#39ff14';
+const MATRIX_GREEN_HEAD = '#c8ffd4';
+const MATRIX_GREEN_DIM = 'rgba(57, 255, 20, 0.28)';
 
 export function MatrixBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -77,14 +78,15 @@ export function MatrixBackground() {
         const x = i * FONT_SIZE;
         const y = drops[i] * FONT_SIZE;
 
-        ctx2d.fillStyle = Math.random() > 0.985 ? MATRIX_GREEN : MATRIX_GREEN_DIM;
+        ctx2d.fillStyle =
+          Math.random() > 0.97 ? MATRIX_GREEN_HEAD : Math.random() > 0.6 ? MATRIX_GREEN : MATRIX_GREEN_DIM;
         ctx2d.fillText(char, x, y);
 
         if (y > height && Math.random() > 0.975) {
           drops[i] = 0;
         }
 
-        drops[i] += 0.45 + Math.random() * 0.55;
+        drops[i] += 0.35 + Math.random() * 0.45;
       }
     }
 

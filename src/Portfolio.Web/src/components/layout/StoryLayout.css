@@ -9,7 +9,7 @@
 .story-nav {
   align-self: start;
   position: sticky;
-  top: 88px;
+  top: 80px;
   padding: 1rem;
 }
 
@@ -17,31 +17,35 @@
   margin: 0 0 0.75rem;
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  color: var(--accent-cyan);
 }
 
 .story-nav__link {
   display: block;
-  padding: 0.55rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   margin-bottom: 0.25rem;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 
 .story-nav__link:hover {
   background: var(--bg-hover);
-  color: var(--text-primary);
+  color: var(--accent);
+  border-color: var(--border);
   text-decoration: none;
+  text-shadow: none;
 }
 
 .story-nav__link--active {
-  background: var(--accent-glow);
+  background: rgba(0, 255, 102, 0.08);
   color: var(--accent);
-  border: 1px solid rgba(34, 211, 238, 0.25);
+  border-color: rgba(57, 255, 20, 0.4);
+  box-shadow: inset 2px 0 0 var(--accent), var(--phosphor-glow);
 }
 
 .story-content {

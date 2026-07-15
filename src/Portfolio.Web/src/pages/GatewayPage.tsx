@@ -22,6 +22,7 @@ export function GatewayPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [handshakeLog, setHandshakeLog] = useState<string[]>([]);
   const [sqlBlockOpen, setSqlBlockOpen] = useState(false);
   const [sqlBlockField, setSqlBlockField] = useState<string | undefined>();
 
@@ -80,6 +81,10 @@ export function GatewayPage() {
 
     setErrors({});
     setSubmitting(true);
+    setHandshakeLog([
+      '[OK] Validating payload integrity…',
+      '[OK] Initiating handshake…',
+    ]);
 
     try {
       const result = await requestAccess({
@@ -89,9 +94,17 @@ export function GatewayPage() {
       });
 
       setPendingEmail(email.trim().toLowerCase());
+      setHandshakeLog((prev) => [
+        ...prev,
+        `[OK] Dispatching OTP vector to ${email.trim().toLowerCase()}…`,
+        '[OK] Awaiting verification code…',
+      ]);
       setSuccessMessage(result.message);
-      navigate('/gateway/verify');
+      window.setTimeout(() => {
+        navigate('/gateway/verify');
+      }, 650);
     } catch (error) {
+      setHandshakeLog((prev) => [...prev, '[!!] Handshake aborted.']);
       if (error instanceof ApiError) {
         if (error.validationErrors) {
           setErrors({
@@ -132,10 +145,23 @@ export function GatewayPage() {
               alt="Gateway"
               className="gateway-card__banner"
             />
-            <span className="badge badge-muted">Block 01</span>
-            <h1>Gateway</h1>
-            <p>Verify your identity to access the interactive resume story.</p>
+            <span className="badge badge-muted">BLK_01 // GATE</span>
+            <h1>GATEWAY</h1>
+            <p>Authenticate to unlock the interactive resume story blocks.</p>
           </div>
+
+          {handshakeLog.length > 0 && (
+            <div className="gateway-handshake" aria-live="polite">
+              {handshakeLog.map((line, index) => (
+                <span
+                  key={`${index}-${line}`}
+                  className={`gateway-handshake__line${line.startsWith('[!!]') ? ' gateway-handshake__line--dim' : ''}`}
+                >
+                  {line}
+                </span>
+              ))}
+            </div>
+          )}
 
           {errors.general && <div className="alert alert-error">{errors.general}</div>}
           {successMessage && <div className="alert alert-success">{successMessage}</div>}
@@ -188,12 +214,12 @@ export function GatewayPage() {
             </div>
 
             <button type="submit" className="btn btn-primary gateway-submit" disabled={submitting}>
-              {submitting ? 'Sending code…' : 'Send verification code'}
+              {submitting ? 'Initiating handshake…' : 'Dispatch OTP vector'}
             </button>
           </form>
 
           <p className="gateway-hint">
-            In development, the OTP appears in the API console when SMTP is not configured.
+            // tip: in local dev the OTP prints to the API console when SMTP is unset
           </p>
         </div>
       </main>

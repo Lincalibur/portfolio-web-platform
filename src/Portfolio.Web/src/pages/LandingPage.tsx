@@ -46,8 +46,11 @@ export function LandingPage() {
 
       <main className="landing-hero container">
         <div className="landing-hero__content">
-          <p className="landing-hero__eyebrow">Bachelor of Computing · Fintech (C#) · API Security</p>
-          <h1>Interactive Resume Ecosystem</h1>
+          <p className="landing-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>
+          <h1>INTERACTIVE RESUME</h1>
+          <p className="landing-hero__prompt">
+            root@portfolio:~$ <span>awaiting_operator_handshake</span>
+          </p>
           <p className="landing-hero__lead">
             Liam Olivier — software developer with a newly earned <strong>Bachelor of Computing</strong>,
             focused on <strong>Fintech solutions in C#</strong> and hands-on experience building{' '}
@@ -56,9 +59,9 @@ export function LandingPage() {
           </p>
 
           <ul className="landing-credentials">
-            <li>🎓 Bachelor of Computing</li>
-            <li>💳 Fintech &amp; enterprise C# development</li>
-            <li>🛡️ API hardening, rate limiting &amp; payload filtering</li>
+            <li>Bachelor of Computing</li>
+            <li>Fintech &amp; enterprise C# development</li>
+            <li>API hardening, rate limiting &amp; payload filtering</li>
           </ul>
 
           <div className="landing-hero__actions">
@@ -81,7 +84,9 @@ export function LandingPage() {
                 className={`status-dot status-dot--${healthState === 'healthy' ? 'healthy' : 'unknown'}`}
                 aria-hidden="true"
               />
-              <span>{healthMessage}</span>
+              <span>
+                [{healthState === 'healthy' ? 'OK' : healthState === 'loading' ? '..' : '!!'}] {healthMessage}
+              </span>
             </div>
           </div>
         </div>
@@ -95,7 +100,7 @@ export function LandingPage() {
             { num: '05', title: 'Contact', desc: 'Finale — email, cell, GitHub & LinkedIn' },
           ].map((block) => (
             <article key={block.num} className="landing-block card">
-              <span className="landing-block__num">{block.num}</span>
+              <span className="landing-block__num">[{block.num}]</span>
               <h3>{block.title}</h3>
               <p>{block.desc}</p>
             </article>
