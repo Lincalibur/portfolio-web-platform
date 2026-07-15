@@ -10,11 +10,11 @@
   "quoteAuthor": "Salvador Dalí",
   "bio": "I'm Liam Olivier, a software developer with a Bachelor of Computing, focused on Fintech solutions in C# and building API security tooling. I combine strong engineering fundamentals with hands-on DevOps and security practice.",
   "highlights": [
-    { "icon": "🎓", "label": "Education", "text": "Bachelor of Computing — recently completed." },
-    { "icon": "💳", "label": "Focus", "text": "Fintech development with C# and enterprise APIs." },
-    { "icon": "🛡️", "label": "Security", "text": "API hardening tools — rate limiting, token validation, payload filtering." },
-    { "icon": "🌍", "text": "Based in Western Cape, South Africa." },
-    { "icon": "🤝", "label": "Open for", "text": "Collaborations on Open Source security tools or DevOps automation." }
+    { "icon": "education", "label": "Education", "text": "Bachelor of Computing — recently completed." },
+    { "icon": "fintech", "label": "Focus", "text": "Fintech development with C# and enterprise APIs." },
+    { "icon": "shield", "label": "Security", "text": "API hardening tools — rate limiting, token validation, payload filtering." },
+    { "icon": "globe", "text": "Based in Western Cape, South Africa." },
+    { "icon": "handshake", "label": "Open for", "text": "Collaborations on Open Source security tools or DevOps automation." }
   ],
   "skillGroups": [
     {

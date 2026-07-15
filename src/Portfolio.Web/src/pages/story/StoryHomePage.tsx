@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { resolveHighlightIcon, VectorIcon } from '../../components/icons/VectorIcon';
 import { TypingHeadline } from '../../components/profile/TypingHeadline';
 import { assetUrl } from '../../utils/assetUrl';
+import '../../components/icons/VectorIcon.css';
 import './StoryHomePage.css';
 
 interface ProfileHighlight {
@@ -41,30 +42,34 @@ interface ProfileData {
 
 const blocks = [
   {
-    to: '/story/pipeline',
+    id: 'pipeline',
     num: '02',
     title: 'DevOps Pipeline',
     description: 'Explore how this project ships — CI/CD nodes, statuses, and YAML snippets.',
   },
   {
-    to: '/story/orchestration',
+    id: 'security',
     num: '03',
     title: 'API Gateway & Security',
     description: 'Interactive gateway circuit with live attack simulation and security event log.',
   },
   {
-    to: '/story/automation',
+    id: 'automation',
     num: '04',
     title: 'Automation Hub',
     description: 'Script repository — reconnaissance and deployment demos.',
   },
   {
-    to: '/story/contact',
+    id: 'contact',
     num: '05',
     title: 'Contact',
     description: 'You made it to the end — reach out via email, cell, GitHub, or LinkedIn.',
   },
 ];
+
+function scrollToId(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 export function StoryHomePage() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -115,7 +120,7 @@ export function StoryHomePage() {
         <ul className="profile-highlights">
           {profile.highlights.map((item) => (
             <li key={item.text}>
-              <span aria-hidden="true">{item.icon}</span>
+              <VectorIcon name={resolveHighlightIcon(item.icon)} className="vector-icon--lg" />
               {item.label ? (
                 <>
                   <strong>{item.label}:</strong> {item.text}
@@ -171,22 +176,29 @@ export function StoryHomePage() {
 
       <section className="story-home__explore">
         <header className="story-home__header">
-          <span className="badge badge-success">Authenticated</span>
-          <h2>Explore the story</h2>
+          <span className="badge badge-success">Open access</span>
+          <h2>Continue the story</h2>
           <p>
-            You passed the gateway. Each block below demonstrates a different engineering
-            capability — select one from the sidebar or the cards below.
+            Scroll the single page — or jump ahead to a block. Each section demonstrates a
+            different engineering capability.
           </p>
         </header>
 
         <div className="story-home__grid">
           {blocks.map((block) => (
-            <Link key={block.to} to={block.to} className="story-home__card card">
+            <button
+              key={block.id}
+              type="button"
+              className="story-home__card card"
+              onClick={() => scrollToId(block.id)}
+            >
               <span className="story-home__num">{block.num}</span>
               <h3>{block.title}</h3>
               <p>{block.description}</p>
-              <span className="story-home__link">Open block →</span>
-            </Link>
+              <span className="story-home__link">
+                Jump down <VectorIcon name="arrow-down" />
+              </span>
+            </button>
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>

@@ -72,10 +72,14 @@
   margin-bottom: 0.5rem;
 }
 
-.gateway-node p {
+.gateway-node p,
+.gateway-node__label {
   margin: 0 0 0.35rem;
   font-weight: 600;
   font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .gateway-node--threat {

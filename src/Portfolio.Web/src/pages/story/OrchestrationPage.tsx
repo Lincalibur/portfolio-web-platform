@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { VectorIcon } from '../../components/icons/VectorIcon';
+import '../../components/icons/VectorIcon.css';
 import './OrchestrationPage.css';
 
 type AttackPhase = 'idle' | 'traveling' | 'blocked' | 'done';
@@ -98,7 +100,9 @@ export function OrchestrationPage() {
             <span className="gateway-node__status gateway-node__status--ok">Normal flow</span>
           </div>
           <div className="gateway-node gateway-node--threat">
-            <p>Malicious Payload 🛑</p>
+            <p className="gateway-node__label">
+              Malicious Payload <VectorIcon name="stop" className="vector-icon--danger" />
+            </p>
             <span className="gateway-node__status gateway-node__status--danger">Blocked path</span>
           </div>
         </div>
@@ -109,7 +113,9 @@ export function OrchestrationPage() {
               <span className={`gateway-packet${attackPhase === 'blocked' ? ' gateway-packet--blocked' : ''}`} />
             )}
           </div>
-          <span className="gateway-flow__arrow">→</span>
+          <span className="gateway-flow__arrow">
+            <VectorIcon name="arrow-right" className="vector-icon--muted" />
+          </span>
         </div>
 
         <div className={`gateway-column gateway-column--security${securityFlash ? ' gateway-column--flash' : ''}`}>
@@ -119,13 +125,17 @@ export function OrchestrationPage() {
             <span className="gateway-node__status gateway-node__status--ok">Token validation</span>
           </div>
           <div className="gateway-node">
-            <p>Rate Limiter 🛡️</p>
+            <p className="gateway-node__label">
+              Rate Limiter <VectorIcon name="shield" />
+            </p>
             <span className="gateway-node__status gateway-node__status--shield">Payload filter</span>
           </div>
         </div>
 
         <div className="gateway-flow" aria-hidden="true">
-          <span className="gateway-flow__arrow">→</span>
+          <span className="gateway-flow__arrow">
+            <VectorIcon name="arrow-right" className="vector-icon--muted" />
+          </span>
         </div>
 
         <div className="gateway-column">

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { VectorIcon, type IconName } from '../../components/icons/VectorIcon';
 import { assetUrl } from '../../utils/assetUrl';
+import '../../components/icons/VectorIcon.css';
 import './ContactPage.css';
 
 interface ContactData {
@@ -24,7 +25,7 @@ const contactChannels = [
   {
     key: 'email',
     label: 'Email',
-    emoji: '✉️',
+    icon: 'mail' as IconName,
     tone: 'email',
     getHref: (contact: ContactData) => `mailto:${contact.email}`,
     getValue: (contact: ContactData) => contact.email,
@@ -33,7 +34,7 @@ const contactChannels = [
   {
     key: 'cell',
     label: 'Cell',
-    emoji: '📱',
+    icon: 'phone' as IconName,
     tone: 'cell',
     getHref: (contact: ContactData) => `tel:${contact.cell.replace(/\s/g, '')}`,
     getValue: (contact: ContactData) => contact.cell,
@@ -42,7 +43,7 @@ const contactChannels = [
   {
     key: 'github',
     label: 'GitHub',
-    emoji: '🐙',
+    icon: 'github' as IconName,
     tone: 'github',
     getHref: (contact: ContactData) => contact.github,
     getValue: () => 'lincalibur',
@@ -51,13 +52,15 @@ const contactChannels = [
   {
     key: 'linkedin',
     label: 'LinkedIn',
-    emoji: '💼',
+    icon: 'linkedin' as IconName,
     tone: 'linkedin',
     getHref: (contact: ContactData) => contact.linkedin,
     getValue: () => 'liam-olivier',
     getAction: () => 'Let’s connect',
   },
 ] as const;
+
+const sparkIcons: IconName[] = ['spark', 'rocket', 'chat', 'bolt', 'party'];
 
 export function ContactPage() {
   const [contact, setContact] = useState<ContactData | null>(null);
@@ -87,9 +90,9 @@ export function ContactPage() {
     <div className="contact-page">
       <section className="contact-hero card">
         <div className="contact-hero__sparkles" aria-hidden="true">
-          {['✨', '🚀', '💬', '⚡', '🎉'].map((spark, index) => (
-            <span key={spark} style={{ animationDelay: `${index * 0.35}s` }}>
-              {spark}
+          {sparkIcons.map((name, index) => (
+            <span key={name} style={{ animationDelay: `${index * 0.35}s` }}>
+              <VectorIcon name={name} className="vector-icon--lg" />
             </span>
           ))}
         </div>
@@ -107,7 +110,7 @@ export function ContactPage() {
 
         <p className="contact-hero__prompt">
           <span className="contact-hero__prompt-arrow" aria-hidden="true">
-            ↓
+            <VectorIcon name="arrow-down" />
           </span>
           {contact.prompt}
         </p>
@@ -136,11 +139,13 @@ export function ContactPage() {
               }}
             >
               <span className="contact-card__emoji" aria-hidden="true">
-                {channel.emoji}
+                <VectorIcon name={channel.icon} className="vector-icon--xl" />
               </span>
               <span className="contact-card__label">{channel.label}</span>
               <span className="contact-card__value">{channel.getValue(contact)}</span>
-              <span className="contact-card__action">{channel.getAction()} →</span>
+              <span className="contact-card__action">
+                {channel.getAction()} <VectorIcon name="arrow-right" />
+              </span>
             </a>
           );
         })}
@@ -148,8 +153,17 @@ export function ContactPage() {
 
       <section className="contact-footer card">
         <p>
-          Prefer to re-run the tour? Head back to the{' '}
-          <Link to="/story">story overview</Link> or sign out when you are done exploring.
+          Prefer to re-run the tour? Jump back to the{' '}
+          <button
+            type="button"
+            className="contact-footer__link"
+            onClick={() =>
+              document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+          >
+            story overview
+          </button>{' '}
+          and keep exploring.
         </p>
         <p className="contact-footer__signoff">Thanks for stopping by — Liam</p>
       </section>

@@ -98,19 +98,17 @@ npm run dev
 
 Open **http://localhost:5173** in your browser.
 
-The landing page health indicator should show **API status: healthy**. If it does not, see [Troubleshooting](#7-troubleshooting).
+The SPA is a **single scrollable page** (no login gate). Scroll or use the side rail / header jumps: Overview → Pipeline → API Security → Automation → Contact.
 
 ### Step 3 — Walk through the app
 
 | Step | Route | What happens |
 | --- | --- | --- |
-| 1 | `/` | Landing page; health check via proxy |
-| 2 | `/gateway` | Submit name + email → `POST /api/auth/request-access` |
-| 3 | API console | OTP printed when SMTP is not configured (see below) |
-| 4 | `/gateway/verify` | Enter 6-digit code → JWT issued |
-| 5 | `/story` | Profile overview + story blocks (Pipeline, Orchestration, Automation, Docs) |
+| 1 | `/` | Full portfolio stream (hero + all story sections) |
+| 2 | `/#pipeline` etc. | Deep-link / jump to a section |
+| 3 | `/admin/login` | Optional ops dashboard (still API-authenticated) |
 
-After verification, the session JWT is stored in `sessionStorage`. Use **Sign out** in the story shell to clear it.
+Legacy `/gateway` and `/story/*` routes redirect to `/`. API OTP endpoints still exist for backend/admin demos — they are no longer required to browse the CV.
 
 ---
 
@@ -290,9 +288,9 @@ GitHub Pages **cannot run** `Portfolio.Api`. The workflow [`.github/workflows/de
 3. If deploy hangs on `purging_cdn` / times out after ~10 minutes, that is a known GitHub CDN issue (not your code). Re-run the workflow later. The OWASP security gate on `development` is unrelated to Pages.
 4. Open `https://<owner>.github.io/<repo>/` (e.g. `https://lincalibur.github.io/portfolio-web-platform/`).
 
-### Demo OTP on Pages
+### Pages demo mode
 
-Use code **`000000`** after submitting the gateway form. Admin login and live host/traffic APIs are unavailable in this mode.
+The site is open-access (no OTP). Admin login and live host/traffic APIs remain unavailable in static demo mode.
 
 ### Local static preview (same as Pages)
 
@@ -326,12 +324,10 @@ Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.m
 | Run both (Windows) | Double-click `start-dev.bat` at repo root |
 | Run API | `start-api.bat` or `cd src/Portfolio.Api` → `dotnet run` |
 | Run SPA | `start-web.bat` or `cd src/Portfolio.Web` → `npm run dev` |
-| App URL | http://localhost:5173 |
+| App URL | http://localhost:5173 (single scroll portfolio) |
 | API health | http://localhost:5180/health |
-| Gateway | http://localhost:5173/gateway |
-| Story (after auth) | http://localhost:5173/story |
 | Admin portal | http://localhost:5173/admin/login |
-| GitHub Pages demo | `https://<owner>.github.io/<repo>/` (OTP `000000`) |
+| GitHub Pages demo | `https://<owner>.github.io/<repo>/` |
 | Pages workflow | `.github/workflows/deploy-github-pages.yml` |
 
 ---

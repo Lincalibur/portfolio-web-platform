@@ -150,6 +150,11 @@
 .story-home__card {
   display: flex;
   flex-direction: column;
+  text-align: left;
+  appearance: none;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
   text-decoration: none;
   color: inherit;
   transition: border-color 0.15s, transform 0.15s;

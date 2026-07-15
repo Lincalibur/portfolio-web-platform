@@ -218,9 +218,6 @@ export function GatewayPage() {
             </button>
           </form>
 
-          <p className="gateway-hint">
-            // tip: in local dev the OTP prints to the API console when SMTP is unset
-          </p>
         </div>
       </main>
     </div>

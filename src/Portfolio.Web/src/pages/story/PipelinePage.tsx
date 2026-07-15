@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { VectorIcon } from '../../components/icons/VectorIcon';
 import { assetUrl } from '../../utils/assetUrl';
+import '../../components/icons/VectorIcon.css';
 import './PipelinePage.css';
 
 interface PipelineNode {
@@ -115,7 +117,8 @@ export function PipelinePage() {
               disabled={playing}
               aria-label="Play pipeline simulation"
             >
-              {playing ? '▶ Running…' : '▶ Play'}
+              <VectorIcon name="play" />
+              {playing ? 'Running…' : 'Play'}
             </button>
           </div>
 
