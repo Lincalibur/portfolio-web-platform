@@ -1,7 +1,8 @@
+import { assetUrl } from '../../utils/assetUrl';
 import './GatewaySqlBlockModal.css';
 
 /** Drop your GIF at public/gateway-sql-blocked.gif to replace the placeholder. */
-const BLOCKED_GIF_PATH = '/gateway-sql-blocked.gif';
+const BLOCKED_GIF_PATH = assetUrl('/gateway-sql-blocked.gif');
 
 interface GatewaySqlBlockModalProps {
   open: boolean;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getHealth } from '../api/apiClient';
+import { getHealth, STATIC_DEMO } from '../api/apiClient';
 import { SiteHeader } from '../components/layout/SiteHeader';
 import './LandingPage.css';
 
@@ -8,7 +8,9 @@ type HealthState = 'loading' | 'healthy' | 'error';
 
 export function LandingPage() {
   const [healthState, setHealthState] = useState<HealthState>('loading');
-  const [healthMessage, setHealthMessage] = useState('Checking API…');
+  const [healthMessage, setHealthMessage] = useState(
+    STATIC_DEMO ? 'Loading static demo…' : 'Checking API…',
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -17,7 +19,11 @@ export function LandingPage() {
       .then((result) => {
         if (cancelled) return;
         setHealthState(result.status === 'healthy' ? 'healthy' : 'error');
-        setHealthMessage(`API status: ${result.status}`);
+        setHealthMessage(
+          STATIC_DEMO
+            ? 'GitHub Pages static demo — OTP is simulated (code 000000). Live API features are offline.'
+            : `API status: ${result.status}`,
+        );
       })
       .catch(() => {
         if (cancelled) return;

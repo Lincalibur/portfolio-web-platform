@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { assetUrl } from '../../utils/assetUrl';
 import './PipelinePage.css';
 
 interface PipelineNode {
@@ -38,7 +39,7 @@ export function PipelinePage() {
   const [completedPlayIds, setCompletedPlayIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    fetch('/fixtures/pipeline.json')
+    fetch(assetUrl('/fixtures/pipeline.json'))
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load pipeline fixture');
         return res.json() as Promise<PipelineData>;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { logInteraction } from '../../api/apiClient';
 import { getToken } from '../../auth/authStorage';
+import { assetUrl } from '../../utils/assetUrl';
 import { runAutomationSequence } from './automationRunner';
 import {
   buildCommand,
@@ -71,7 +72,7 @@ export function AutomationPage() {
   const runCommand = activeScript ? buildCommand(activeScript.id, params) : '';
 
   useEffect(() => {
-    fetch('/fixtures/automation-scripts.json')
+    fetch(assetUrl('/fixtures/automation-scripts.json'))
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load automation scripts');
         return res.json() as Promise<AutomationScriptsData>;
@@ -97,7 +98,7 @@ export function AutomationPage() {
     setSpinnerLine(null);
     setFinaleState(null);
 
-    fetch(activeScript.sourcePath)
+    fetch(assetUrl(activeScript.sourcePath))
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load source');
         return res.text();

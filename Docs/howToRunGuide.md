@@ -272,7 +272,42 @@ $token = $auth.accessToken
 
 ---
 
-## 8. Production deployment (overview)
+## 8. GitHub Pages (static SPA demo)
+
+GitHub Pages **cannot run** `Portfolio.Api`. The workflow [`.github/workflows/deploy-github-pages.yml`](../.github/workflows/deploy-github-pages.yml) builds only `src/Portfolio.Web` with:
+
+| Variable | Value | Purpose |
+| --- | --- | --- |
+| `BASE_PATH` | `/<repo-name>/` | Asset + router base for project Pages |
+| `VITE_STATIC_DEMO` | `true` | Mock auth / health; skip live API calls |
+| `VITE_ENABLE_INTERACTION_METRICS` | `false` | No metrics POSTs |
+| `VITE_USE_HOST_STATS_API` | `false` | Use `fixtures/host-stats.json` |
+
+### Enable Pages once
+
+1. Repo → **Settings** → **Pages** → **Source**: **GitHub Actions**.
+2. Push to `development` or `main` (or run the workflow via **Actions** → **Deploy GitHub Pages** → **Run workflow**).
+3. Open `https://<owner>.github.io/<repo>/` (e.g. `https://lincalibur.github.io/portfolio-web-platform/`).
+
+### Demo OTP on Pages
+
+Use code **`000000`** after submitting the gateway form. Admin login and live host/traffic APIs are unavailable in this mode.
+
+### Local static preview (same as Pages)
+
+```powershell
+cd src/Portfolio.Web
+$env:BASE_PATH="/portfolio-web-platform/"
+$env:VITE_STATIC_DEMO="true"
+$env:VITE_ENABLE_INTERACTION_METRICS="false"
+$env:VITE_USE_HOST_STATS_API="false"
+npm run build
+npm run preview
+```
+
+---
+
+## 9. Production deployment (overview)
 
 Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.md). Summary:
 
@@ -283,7 +318,7 @@ Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.m
 
 ---
 
-## 9. Quick reference
+## 10. Quick reference
 
 | What | Command / URL |
 | --- | --- |
@@ -295,10 +330,12 @@ Full Docker/nginx/Cloudflare steps are in [`solutionDesign.md`](solutionDesign.m
 | Gateway | http://localhost:5173/gateway |
 | Story (after auth) | http://localhost:5173/story |
 | Admin portal | http://localhost:5173/admin/login |
+| GitHub Pages demo | `https://<owner>.github.io/<repo>/` (OTP `000000`) |
+| Pages workflow | `.github/workflows/deploy-github-pages.yml` |
 
 ---
 
-## 10. Related documents
+## 11. Related documents
 
 | Document | Purpose |
 | --- | --- |

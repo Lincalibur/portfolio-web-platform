@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ApiError, logInteraction, verifyOtp } from '../api/apiClient';
+import { ApiError, DEMO_OTP_HINT, logInteraction, STATIC_DEMO, verifyOtp } from '../api/apiClient';
 import {
   clearPendingEmail,
   getPendingEmail,
@@ -87,7 +87,16 @@ export function VerifyPage() {
           <span className="badge badge-muted">Block 01</span>
           <h1>Enter verification code</h1>
           <p className="verify-lead">
-            We sent a one-time code to <strong>{email}</strong>.
+            {STATIC_DEMO ? (
+              <>
+                Static demo for <strong>{email}</strong> — enter code{' '}
+                <strong>{DEMO_OTP_HINT}</strong> (no email is sent on GitHub Pages).
+              </>
+            ) : (
+              <>
+                We sent a one-time code to <strong>{email}</strong>.
+              </>
+            )}
           </p>
 
           {error && <div className="alert alert-error">{error}</div>}

@@ -1,6 +1,12 @@
+import { assetUrl } from '../utils/assetUrl';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 const ENABLE_INTERACTION_METRICS = import.meta.env.VITE_ENABLE_INTERACTION_METRICS === 'true';
 const USE_HOST_STATS_API = import.meta.env.VITE_USE_HOST_STATS_API === 'true';
+/** Static hosting (e.g. GitHub Pages) — no Portfolio.Api available. */
+const STATIC_DEMO = import.meta.env.VITE_STATIC_DEMO === 'true';
+
+const DEMO_OTP_HINT = '000000';
 
 export interface HealthResponse {
   status: string;
@@ -119,10 +125,20 @@ async function request<T>(
 }
 
 export async function getHealth(): Promise<HealthResponse> {
+  if (STATIC_DEMO) {
+    return { status: 'healthy' };
+  }
+
   return request<HealthResponse>('/health');
 }
 
 export async function requestAccess(payload: RequestAccessPayload): Promise<RequestAccessResult> {
+  if (STATIC_DEMO) {
+    return {
+      message: `Static demo for ${payload.email}: enter code ${DEMO_OTP_HINT} on the next screen (no email is sent on GitHub Pages).`,
+    };
+  }
+
   return request<RequestAccessResult>('/api/auth/request-access', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -130,6 +146,18 @@ export async function requestAccess(payload: RequestAccessPayload): Promise<Requ
 }
 
 export async function verifyOtp(payload: VerifyOtpPayload): Promise<VerifyOtpResult> {
+  if (STATIC_DEMO) {
+    if (payload.code.trim() !== DEMO_OTP_HINT) {
+      throw new ApiError('Invalid or expired code. Request a new one from the gateway.', 401);
+    }
+
+    const expiresAt = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString();
+    return {
+      accessToken: 'static-demo-token',
+      expiresAt,
+    };
+  }
+
   return request<VerifyOtpResult>('/api/auth/verify', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -142,7 +170,7 @@ export async function logInteraction(
   payloadJson: string | null,
   token: string | null,
 ): Promise<void> {
-  if (!ENABLE_INTERACTION_METRICS) {
+  if (STATIC_DEMO || !ENABLE_INTERACTION_METRICS) {
     if (import.meta.env.DEV) {
       console.debug('[metrics]', { blockId, eventType, payloadJson });
     }
@@ -164,11 +192,11 @@ export async function logInteraction(
 }
 
 export async function getHostStats(token: string | null): Promise<HostStats> {
-  if (USE_HOST_STATS_API && token) {
+  if (!STATIC_DEMO && USE_HOST_STATS_API && token) {
     return request<HostStats>('/api/host/stats', {}, token);
   }
 
-  const response = await fetch('/fixtures/host-stats.json');
+  const response = await fetch(assetUrl('/fixtures/host-stats.json'));
   if (!response.ok) {
     throw new Error('Failed to load host stats fixture');
   }
@@ -177,6 +205,13 @@ export async function getHostStats(token: string | null): Promise<HostStats> {
 }
 
 export async function adminLogin(payload: AdminLoginPayload): Promise<AdminLoginResult> {
+  if (STATIC_DEMO) {
+    throw new ApiError(
+      'Admin dashboard requires the live Portfolio.Api. It is unavailable on GitHub Pages.',
+      503,
+    );
+  }
+
   return request<AdminLoginResult>('/api/admin/login', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -184,7 +219,11 @@ export async function adminLogin(payload: AdminLoginPayload): Promise<AdminLogin
 }
 
 export async function getOpsReport(token: string): Promise<OpsReport> {
+  if (STATIC_DEMO) {
+    throw new ApiError('Ops report requires the live API (not available in static demo).', 503);
+  }
+
   return request<OpsReport>('/api/ops/report', {}, token);
 }
 
-export { ENABLE_INTERACTION_METRICS, USE_HOST_STATS_API };
+export { ENABLE_INTERACTION_METRICS, USE_HOST_STATS_API, STATIC_DEMO, DEMO_OTP_HINT };
