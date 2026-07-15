@@ -1,9 +1,10 @@
 name: Deploy GitHub Pages
 
-# Builds Portfolio.Web from main only and publishes dist/ to the gh-pages branch.
-# Feature / development branches do not deploy — merge to main to update the site.
-# GitHub Pages must use: Settings → Pages → Deploy from a branch → gh-pages / / (root)
-# Do NOT point Pages at main/development (that serves the README, not the SPA).
+# Builds Portfolio.Web from main only and deploys via GitHub Actions Pages.
+# Feature / development branches do not publish — merge to main to update the site.
+#
+# One-time setup: Settings → Pages → Source = GitHub Actions
+# (Do not use "Deploy from a branch" — that triggers the flaky pages-build-deployment CDN purge.)
 
 on:
   push:
@@ -15,15 +16,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
-    name: Build and deploy SPA
+  build:
+    name: Build static SPA
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,6 +38,9 @@ jobs:
           node-version: '20'
           cache: npm
           cache-dependency-path: src/Portfolio.Web/package-lock.json
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Install dependencies
         working-directory: src/Portfolio.Web
@@ -53,15 +59,40 @@ jobs:
 
       - name: SPA fallback for deep links
         working-directory: src/Portfolio.Web
-        # GitHub Pages serves 404.html for unknown paths; copy index so client routing works.
         run: cp dist/index.html dist/404.html
 
-      - name: Publish to gh-pages branch
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./src/Portfolio.Web/dist
-          force_orphan: true
-          # Avoid committing a redundant commit message footer from the action when empty
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          path: src/Portfolio.Web/dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
+    steps:
+      # Transient GitHub CDN hangs (purging_cdn) are a known platform flake.
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 600000
+        continue-on-error: true
+
+      - name: Deploy retry (CDN purge flakiness)
+        id: deployment_retry
+        if: steps.deployment.outcome != 'success'
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 600000
+        continue-on-error: true
+
+      - name: Fail if both deploy attempts failed
+        if: steps.deployment.outcome != 'success' && steps.deployment_retry.outcome != 'success'
+        run: |
+          echo "GitHub Pages deploy failed twice (often a transient CDN purge outage)."
+          echo "Re-run this workflow later, or check https://www.githubstatus.com/"
+          exit 1
