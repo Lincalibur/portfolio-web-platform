@@ -3,24 +3,17 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 0.75rem 1rem 0.5rem;
+  padding: 0.5rem 0.75rem 0.35rem;
   overflow: hidden;
   background: radial-gradient(
-    ellipse 75% 65% at 50% 48%,
-    rgba(0, 255, 102, 0.07),
-    transparent 72%
+    ellipse 80% 55% at 50% 50%,
+    rgba(57, 255, 106, 0.06),
+    transparent 70%
   );
 }
 
-.ascii-eye__art {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: clamp(0.5rem, 1.4vw, 0.72rem);
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  color: var(--accent-bright);
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
-  white-space: pre;
-  user-select: none;
-  text-align: center;
+.ascii-eye__slot {
+  width: min(100%, 42rem);
+  height: clamp(11rem, 28vw, 15rem);
+  position: relative;
 }
