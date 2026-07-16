@@ -1,15 +1,7 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { TrafficBeacon } from '../components/TrafficBeacon';
-import { LandingPage } from '../pages/LandingPage';
-import { GatewayPage } from '../pages/GatewayPage';
-import { VerifyPage } from '../pages/VerifyPage';
-import { StoryLayout } from '../components/layout/StoryLayout';
-import { StoryHomePage } from '../pages/story/StoryHomePage';
-import { PipelinePage } from '../pages/story/PipelinePage';
-import { OrchestrationPage } from '../pages/story/OrchestrationPage';
-import { AutomationPage } from '../pages/story/AutomationPage';
-import { ContactPage } from '../pages/story/ContactPage';
-import { GuestRoute, AdminProtectedRoute, ProtectedRoute } from './ProtectedRoute';
+import { PortfolioPage } from '../pages/PortfolioPage';
+import { AdminProtectedRoute } from './ProtectedRoute';
 import { AdminLoginPage } from '../pages/admin/AdminLoginPage';
 import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
 
@@ -28,31 +20,16 @@ export const router = createBrowserRouter(
       children: [
         {
           path: '/',
-          element: <LandingPage />,
+          element: <PortfolioPage />,
         },
-        {
-          element: <GuestRoute />,
-          children: [
-            { path: '/gateway', element: <GatewayPage /> },
-            { path: '/gateway/verify', element: <VerifyPage /> },
-          ],
-        },
-        {
-          element: <ProtectedRoute />,
-          children: [
-            {
-              path: '/story',
-              element: <StoryLayout />,
-              children: [
-                { index: true, element: <StoryHomePage /> },
-                { path: 'pipeline', element: <PipelinePage /> },
-                { path: 'orchestration', element: <OrchestrationPage /> },
-                { path: 'automation', element: <AutomationPage /> },
-                { path: 'contact', element: <ContactPage /> },
-              ],
-            },
-          ],
-        },
+        // Legacy gated routes → open scroll portfolio
+        { path: '/gateway', element: <Navigate to="/" replace /> },
+        { path: '/gateway/verify', element: <Navigate to="/" replace /> },
+        { path: '/story', element: <Navigate to="/#overview" replace /> },
+        { path: '/story/pipeline', element: <Navigate to="/#pipeline" replace /> },
+        { path: '/story/orchestration', element: <Navigate to="/#security" replace /> },
+        { path: '/story/automation', element: <Navigate to="/#automation" replace /> },
+        { path: '/story/contact', element: <Navigate to="/#contact" replace /> },
         {
           element: <AdminProtectedRoute />,
           children: [

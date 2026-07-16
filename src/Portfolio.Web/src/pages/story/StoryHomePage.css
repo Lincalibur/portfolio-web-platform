@@ -9,17 +9,8 @@
   padding: 0;
 }
 
-.profile-hero__banner {
-  display: block;
-  width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-}
-
-.profile-hero__wave {
-  display: flex;
-  justify-content: center;
-  margin-top: 0.75rem;
+.profile-hero__eye {
+  border-bottom: 1px solid var(--border);
 }
 
 .profile-hero__role {
@@ -150,6 +141,11 @@
 .story-home__card {
   display: flex;
   flex-direction: column;
+  text-align: left;
+  appearance: none;
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
   text-decoration: none;
   color: inherit;
   transition: border-color 0.15s, transform 0.15s;

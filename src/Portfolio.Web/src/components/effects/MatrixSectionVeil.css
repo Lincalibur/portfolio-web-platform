@@ -1,0 +1,57 @@
+.matrix-section-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.88);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.42s steps(14, end);
+}
+
+.matrix-section-veil--clear {
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 0.38s steps(12, end);
+}
+
+.matrix-section-veil--dense {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.45s steps(14, end);
+}
+
+.matrix-section-veil__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.92;
+}
+
+.matrix-section-veil__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matrix-section-veil {
+    transition: opacity 0.2s ease;
+    clip-path: none;
+    opacity: 1;
+  }
+
+  .matrix-section-veil--clear {
+    opacity: 0;
+  }
+
+  .matrix-section-veil__canvas {
+    display: none;
+  }
+}

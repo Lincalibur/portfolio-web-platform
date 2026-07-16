@@ -125,9 +125,8 @@ Example for this repo: `https://lincalibur.github.io/portfolio-web-platform/`
 ### Try the demo on Pages
 
 1. Open the site URL above.
-2. **Enter the gateway** → submit name + email (validation / SQL-block UI still runs).
-3. On verify, enter OTP **`000000`** (no email is sent).
-4. Explore `/story/*` with baked-in fixtures.
+2. Scroll the single-page portfolio (overview → pipeline → security → automation → contact).
+3. No login gate — content is open. Admin routes still require the live API when available.
 
 ### Preview the Pages build locally
 

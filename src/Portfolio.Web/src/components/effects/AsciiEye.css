@@ -1,0 +1,19 @@
+.ascii-eye {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.35rem;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 80% 55% at 50% 50%,
+    rgba(57, 255, 106, 0.06),
+    transparent 70%
+  );
+}
+
+.ascii-eye__slot {
+  width: min(100%, 42rem);
+  height: clamp(11rem, 28vw, 15rem);
+  position: relative;
+}
