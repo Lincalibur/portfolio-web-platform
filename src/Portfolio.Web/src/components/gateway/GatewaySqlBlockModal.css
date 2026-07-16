@@ -44,17 +44,9 @@
   justify-content: center;
 }
 
-.sql-block-window__gif {
-  width: min(280px, 100%);
-  max-height: 200px;
-  object-fit: contain;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(248, 113, 113, 0.35);
-}
-
-.sql-block-window__gif-fallback {
-  font-size: 4rem;
-  line-height: 1;
+.sql-block-window__icon {
+  color: #f87171;
+  filter: drop-shadow(0 0 18px rgba(248, 113, 113, 0.55));
 }
 
 .sql-block-window__title {

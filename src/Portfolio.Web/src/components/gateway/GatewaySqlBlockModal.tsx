@@ -1,8 +1,6 @@
-import { assetUrl } from '../../utils/assetUrl';
+import { VectorIcon } from '../../components/icons/VectorIcon';
+import '../../components/icons/VectorIcon.css';
 import './GatewaySqlBlockModal.css';
-
-/** Drop your GIF at public/gateway-sql-blocked.gif to replace the placeholder. */
-const BLOCKED_GIF_PATH = assetUrl('/gateway-sql-blocked.gif');
 
 interface GatewaySqlBlockModalProps {
   open: boolean;
@@ -20,22 +18,8 @@ export function GatewaySqlBlockModal({ open, fieldLabel, onClose }: GatewaySqlBl
       <div className="sql-block-window">
         <div className="sql-block-window__glow" aria-hidden="true" />
 
-        <div className="sql-block-window__media">
-          <img
-            src={BLOCKED_GIF_PATH}
-            alt=""
-            className="sql-block-window__gif"
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-              const fallback = event.currentTarget.nextElementSibling;
-              if (fallback instanceof HTMLElement) {
-                fallback.hidden = false;
-              }
-            }}
-          />
-          <div className="sql-block-window__gif-fallback" hidden aria-hidden="true">
-            🛑
-          </div>
+        <div className="sql-block-window__media" aria-hidden="true">
+          <VectorIcon name="shield" className="sql-block-window__icon vector-icon--xl" />
         </div>
 
         <h2 id="sql-block-title" className="sql-block-window__title">

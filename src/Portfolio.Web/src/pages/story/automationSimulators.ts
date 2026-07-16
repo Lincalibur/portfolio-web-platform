@@ -134,25 +134,25 @@ function generateDeployEnvSteps(params: Record<string, string>): AutomationStep[
   return [
     ...bannerSteps(),
     { type: 'spinner', message: `Preparing ${envLabel} launch sequence…`, durationMs: 1200, intervalMs: 80 },
-    ...progressSequence('phase-keys', '🔐 Securing the front door', [20, 45, 70, 100], 150),
+    ...progressSequence('phase-keys', '[SEC] Securing the front door', [20, 45, 70, 100], 150),
     {
       type: 'line',
       line: { text: '    ✓ Gateway keeper online', tone: 'success' },
       delayMs: 120,
     },
-    ...progressSequence('phase-network', '🌐 Opening safe network lanes', [15, 40, 68, 100], 150),
+    ...progressSequence('phase-network', '[NET] Opening safe network lanes', [15, 40, 68, 100], 150),
     {
       type: 'line',
       line: { text: '    ✓ Isolated bridge network ready', tone: 'success' },
       delayMs: 120,
     },
-    ...progressSequence('phase-services', '🚀 Lighting up story blocks', [10, 35, 60, 85, 100], 140),
+    ...progressSequence('phase-services', '[RUN] Lighting up story blocks', [10, 35, 60, 85, 100], 140),
     {
       type: 'line',
       line: { text: `    ✓ ${serviceCount} services started in ${envLabel}`, tone: 'success' },
       delayMs: 120,
     },
-    ...progressSequence('phase-health', '💓 Health check loop', [25, 55, 80, 100], 160),
+    ...progressSequence('phase-health', '[HP] Health check loop', [25, 55, 80, 100], 160),
     {
       type: 'line',
       line: { text: buildProgressBar(100, 32) + '  All systems healthy', tone: 'success', meta: 'progress' },
