@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SkeletonKeyArt } from '../../components/effects/SkeletonKeyArt';
+import { AsciiEye } from '../../components/effects/AsciiEye';
 import { resolveHighlightIcon, VectorIcon } from '../../components/icons/VectorIcon';
 import { TypingHeadline } from '../../components/profile/TypingHeadline';
 import { assetUrl } from '../../utils/assetUrl';
@@ -95,7 +95,7 @@ export function StoryHomePage() {
   return (
     <div className="story-home">
       <section className="profile-hero card">
-        <SkeletonKeyArt className="profile-hero__key" />
+        <AsciiEye className="profile-hero__eye" />
 
         <TypingHeadline lines={profile.typingLines} />
 
