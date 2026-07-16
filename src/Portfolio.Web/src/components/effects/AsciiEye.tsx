@@ -3,8 +3,11 @@ import './AsciiEye.css';
 
 const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+=-[]/';
 const CHARSET_LEN = CHARSET.length;
-const FONT_SIZE = 9;
-const LINE_HEIGHT = 10;
+const FONT_SIZE = 12;
+const LINE_HEIGHT = 14;
+const FRAME_INTERVAL_MS = 1000 / 24;
+const CHAR_REFRESH_EVERY_N_FRAMES = 3;
+const CHAR_REFRESH_PROBABILITY = 0.08;
 const PUPIL_MAX_RATIO = 0.34;
 const PUPIL_VOID_RATIO = 0.11;
 const EYE_RX_RATIO = 0.4;
@@ -35,6 +38,7 @@ interface AsciiEyeProps {
 export function AsciiEye({ className }: AsciiEyeProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const inViewRef = useRef(true);
   const mouseRef = useRef({ x: 0, y: 0, active: false });
   const pupilRef = useRef({ x: 0, y: 0 });
   const frameRef = useRef<number | null>(null);
@@ -58,14 +62,20 @@ export function AsciiEye({ className }: AsciiEyeProps) {
     const ctx2d = ctx;
     let width = 0;
     let height = 0;
+    let centerX = 0;
+    let centerY = 0;
     let blinkUntil = 0;
     let blinkTimeout = 0;
+    let lastFrameTs = 0;
+    let frameCount = 0;
 
     function resize() {
       const rect = rootEl.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = Math.max(1, Math.floor(rect.width));
       height = Math.max(1, Math.floor(rect.height));
+      centerX = rect.left + rect.width / 2;
+      centerY = rect.top + rect.height / 2;
 
       canvasEl.width = Math.floor(width * dpr);
       canvasEl.height = Math.floor(height * dpr);
@@ -97,16 +107,38 @@ export function AsciiEye({ className }: AsciiEyeProps) {
     }
 
     function updateMouse(clientX: number, clientY: number) {
-      const rect = rootEl.getBoundingClientRect();
       mouseRef.current = {
-        x: clientX - (rect.left + rect.width / 2),
-        y: clientY - (rect.top + rect.height / 2),
+        x: clientX - centerX,
+        y: clientY - centerY,
         active: true,
       };
     }
 
+    function startLoop() {
+      if (frameRef.current === null) {
+        frameRef.current = window.requestAnimationFrame(draw);
+      }
+    }
+
+    function stopLoop() {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+    }
+
     function draw(timestamp: number) {
+      if (!inViewRef.current || document.hidden) {
+        frameRef.current = null;
+        return;
+      }
+
       frameRef.current = window.requestAnimationFrame(draw);
+      if (!reducedMotion && timestamp - lastFrameTs < FRAME_INTERVAL_MS) {
+        return;
+      }
+      lastFrameTs = timestamp;
+      frameCount += 1;
 
       const { cols, rows, chars } = gridRef.current;
       if (cols === 0 || rows === 0) {
@@ -136,10 +168,10 @@ export function AsciiEye({ className }: AsciiEyeProps) {
         y: pupilRef.current.y + (desiredY - pupilRef.current.y) * lerp,
       };
 
-      if (!reducedMotion) {
+      if (!reducedMotion && frameCount % CHAR_REFRESH_EVERY_N_FRAMES === 0) {
         for (let row = 0; row < rows; row += 1) {
           for (let col = 0; col < cols; col += 1) {
-            if (Math.random() > 0.72) {
+            if (Math.random() < CHAR_REFRESH_PROBABILITY) {
               chars[row][col] = randomChar();
             }
           }
@@ -209,6 +241,9 @@ export function AsciiEye({ className }: AsciiEyeProps) {
     }
 
     function onPointerMove(event: PointerEvent) {
+      if (!inViewRef.current || document.hidden) {
+        return;
+      }
       updateMouse(event.clientX, event.clientY);
     }
 
@@ -216,24 +251,47 @@ export function AsciiEye({ className }: AsciiEyeProps) {
       mouseRef.current.active = false;
     }
 
+    function onVisibilityChange() {
+      if (document.hidden) {
+        stopLoop();
+      } else if (inViewRef.current) {
+        startLoop();
+      }
+    }
+
     resize();
     scheduleBlink();
-    frameRef.current = window.requestAnimationFrame(draw);
+    startLoop();
 
-    const observer = new ResizeObserver(() => resize());
-    observer.observe(rootEl);
+    const resizeObserver = new ResizeObserver(() => resize());
+    resizeObserver.observe(rootEl);
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const active = entries.some((entry) => entry.isIntersecting);
+        inViewRef.current = active;
+        if (active) {
+          resize();
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: [0, 0.05, 0.2] },
+    );
+    intersectionObserver.observe(rootEl);
 
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     rootEl.addEventListener('pointerleave', onPointerLeave);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      observer.disconnect();
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       rootEl.removeEventListener('pointerleave', onPointerLeave);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       window.clearTimeout(blinkTimeout);
-      if (frameRef.current !== null) {
-        window.cancelAnimationFrame(frameRef.current);
-      }
+      stopLoop();
     };
   }, []);
 
