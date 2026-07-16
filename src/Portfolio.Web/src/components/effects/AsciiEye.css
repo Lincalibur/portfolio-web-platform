@@ -1,36 +1,29 @@
 .ascii-eye {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 1rem 0.5rem;
+  width: 100%;
+  min-height: 11rem;
+  padding: 0.75rem 1rem 0.5rem;
   overflow: hidden;
   background: radial-gradient(
-    ellipse 70% 60% at 50% 45%,
-    rgba(0, 255, 102, 0.08),
-    transparent 68%
+    ellipse 75% 65% at 50% 48%,
+    rgba(0, 255, 102, 0.07),
+    transparent 72%
   );
-  min-height: 9.5rem;
 }
 
-.ascii-eye__art {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: clamp(0.55rem, 1.6vw, 0.78rem);
-  line-height: 1.15;
-  letter-spacing: 0.02em;
-  color: var(--accent-bright);
-  text-shadow: 0 0 8px rgba(57, 255, 20, 0.45);
-  white-space: pre;
-  user-select: none;
-  text-align: center;
-}
-
-.ascii-eye__line {
+.ascii-eye__canvas {
   display: block;
+  width: 100%;
+  height: 11rem;
+  max-width: 36rem;
+  image-rendering: pixelated;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ascii-eye__art {
-    text-shadow: none;
+  .ascii-eye__canvas {
+    image-rendering: auto;
   }
 }
