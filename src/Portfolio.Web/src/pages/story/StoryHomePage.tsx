@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { SkeletonKeyArt } from '../../components/effects/SkeletonKeyArt';
 import { resolveHighlightIcon, VectorIcon } from '../../components/icons/VectorIcon';
 import { TypingHeadline } from '../../components/profile/TypingHeadline';
 import { assetUrl } from '../../utils/assetUrl';
@@ -29,8 +30,6 @@ interface ProfileSocial {
 }
 
 interface ProfileData {
-  heroGif: string;
-  waveGif: string;
   typingLines: string[];
   quote: string;
   quoteAuthor: string;
@@ -96,15 +95,7 @@ export function StoryHomePage() {
   return (
     <div className="story-home">
       <section className="profile-hero card">
-        <img
-          src={profile.heroGif}
-          alt="Profile banner"
-          className="profile-hero__banner"
-        />
-
-        <div className="profile-hero__wave">
-          <img src={profile.waveGif} alt="" aria-hidden="true" width={40} height={40} />
-        </div>
+        <SkeletonKeyArt className="profile-hero__key" />
 
         <TypingHeadline lines={profile.typingLines} />
 
@@ -200,9 +191,6 @@ export function StoryHomePage() {
               </span>
             </button>
           ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-          <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnVuNWhzcHlzOTN1Y3hzdzI1NGV1ZXhrbmVkaHE3MTdqZWg3Mm1kMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1CNsm9ZkHF0m4/giphy.gif" alt="Overview" style={{ width: '100%', borderRadius: '12px', display: 'block', margin: '0 auto' }} />
         </div>
       </section>
     </div>

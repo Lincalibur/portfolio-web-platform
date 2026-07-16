@@ -100,7 +100,6 @@ export function PipelinePage() {
   return (
     <div className="pipeline-page">
       <header className="block-header">
-        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGlyZW1xOHFxZmx1Z3FmN3B4dXdocmhrYTFxOHRjN3JoM3B0dThvMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6xE1FNcorRInS/giphy.gif" alt="Pipeline" style={{ width: '100%', borderRadius: '12px', marginBottom: '1.5rem', display: 'block' }} />
         <span className="badge badge-muted">Block 02</span>
         <h1>{data.title}</h1>
         <p>Run a simulated build or click a stage to inspect generic CI/CD YAML.</p>

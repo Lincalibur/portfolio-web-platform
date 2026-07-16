@@ -74,25 +74,22 @@ body.portfolio-booting {
 }
 
 .portfolio-section {
+  position: relative;
   scroll-margin-top: 88px;
-  transition:
-    opacity 0.45s ease,
-    filter 0.45s ease,
-    transform 0.45s ease;
-  will-change: opacity, filter, transform;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.portfolio-section__content {
+  position: relative;
+  z-index: 1;
 }
 
 .portfolio-section--active {
-  opacity: 1;
-  filter: none;
-  transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
 .portfolio-section--dim {
-  opacity: 0.12;
-  filter: blur(2px) brightness(0.55) saturate(0.45);
-  transform: translateY(14px) scale(0.97);
   pointer-events: none;
 }
 
@@ -192,14 +189,7 @@ body.portfolio-booting {
     visibility: visible;
   }
 
-  .portfolio-section {
-    transition: none;
-  }
-
   .portfolio-section--dim {
-    filter: none;
-    transform: none;
-    opacity: 0.35;
     pointer-events: auto;
   }
 
@@ -219,8 +209,4 @@ body.portfolio-booting {
     padding: 0.3rem 0.4rem;
   }
 
-  .portfolio-section--dim {
-    opacity: 0.16;
-    filter: blur(1.2px) brightness(0.6);
-  }
 }

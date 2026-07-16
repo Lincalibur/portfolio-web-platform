@@ -1,6 +1,4 @@
 {
-  "heroGif": "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2JwdmRkemtxdHRuNnhxMjRwbXEzNTdoZG51Z2dseDZiaWVmbWQ5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JqmupuTVZYaQX5s094/giphy.gif",
-  "waveGif": "https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif",
   "typingLines": [
     "Hi! I'm Liam Olivier.",
     "Bachelor of Computing",
@@ -50,7 +48,6 @@
     }
   ],
   "contact": {
-    "finaleGif": "https://media.giphy.com/media/26BRv0ThflsHCqDrq/giphy.gif",
     "headline": "That's a wrap!",
     "subheadline": "You made it through the whole story — now let's talk.",
     "prompt": "Contact me on one of these…",

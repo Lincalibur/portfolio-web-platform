@@ -7,7 +7,6 @@ import '../../components/icons/VectorIcon.css';
 import './ContactPage.css';
 
 interface ContactData {
-  finaleGif: string;
   headline: string;
   subheadline: string;
   prompt: string;
@@ -96,13 +95,6 @@ export function ContactPage() {
             </span>
           ))}
         </div>
-
-        <img
-          src={contact.finaleGif}
-          alt=""
-          className="contact-hero__gif"
-          aria-hidden="true"
-        />
 
         <p className="contact-hero__eyebrow">Finale · Block 05</p>
         <h1 className="contact-hero__title">{contact.headline}</h1>

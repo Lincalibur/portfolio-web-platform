@@ -1,0 +1,108 @@
+.skeleton-key {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem 0.25rem;
+  overflow: hidden;
+  background: radial-gradient(ellipse 80% 70% at 50% 40%, rgba(0, 255, 102, 0.06), transparent 70%);
+}
+
+.skeleton-key__grid {
+  position: relative;
+  width: min(100%, calc(var(--sk-cols) * 0.42rem));
+  height: calc(var(--sk-rows) * 0.42rem);
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  line-height: 1;
+  letter-spacing: 0;
+  user-select: none;
+}
+
+.skeleton-key__cell {
+  position: absolute;
+  left: calc(var(--sk-col) * 0.42rem);
+  top: calc(var(--sk-row) * 0.42rem);
+  width: 0.42rem;
+  height: 0.42rem;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateX(-0.55rem) translateY(-0.2rem);
+}
+
+.skeleton-key__seed,
+.skeleton-key__glyph {
+  grid-area: 1 / 1;
+  font-size: inherit;
+  line-height: 1;
+}
+
+.skeleton-key__seed {
+  color: rgba(57, 255, 20, 0.35);
+  opacity: 1;
+}
+
+.skeleton-key__glyph {
+  color: var(--accent-bright);
+  text-shadow: 0 0 6px rgba(57, 255, 20, 0.55);
+  opacity: 0;
+}
+
+.skeleton-key__cell--in {
+  animation: skeleton-key-slot var(--sk-total-ms) ease-out var(--sk-delay) forwards;
+}
+
+.skeleton-key__cell--in .skeleton-key__seed {
+  animation: skeleton-key-fade-seed 0.12s ease-out calc(var(--sk-delay) + 0.05s) forwards;
+}
+
+.skeleton-key__cell--in .skeleton-key__glyph {
+  animation: skeleton-key-fade-glyph 0.1s ease-out calc(var(--sk-delay) + 0.08s) forwards;
+}
+
+@keyframes skeleton-key-slot {
+  0% {
+    opacity: 0;
+    transform: translateX(-0.7rem) translateY(-0.35rem);
+  }
+  55% {
+    opacity: 1;
+    transform: translateX(0.08rem) translateY(0.04rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@keyframes skeleton-key-fade-seed {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes skeleton-key-fade-glyph {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-key__cell {
+    opacity: 1;
+    transform: none;
+  }
+
+  .skeleton-key__seed {
+    display: none;
+  }
+
+  .skeleton-key__glyph {
+    opacity: 1;
+  }
+
+  .skeleton-key__cell--in,
+  .skeleton-key__cell--in .skeleton-key__seed,
+  .skeleton-key__cell--in .skeleton-key__glyph {
+    animation: none;
+  }
+}

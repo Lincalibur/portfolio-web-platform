@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BootIntro, shouldSkipBootIntro } from '../components/effects/BootIntro';
+import { MatrixSectionVeil } from '../components/effects/MatrixSectionVeil';
 import { VectorIcon } from '../components/icons/VectorIcon';
 import { SiteHeader } from '../components/layout/SiteHeader';
 import { AutomationPage } from './story/AutomationPage';
@@ -113,6 +114,7 @@ export function PortfolioPage() {
               id="hero"
               className={`portfolio-section${activeId === 'hero' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
+              <div className="portfolio-section__content">
               <div className="portfolio-hero card">
                 <p className="portfolio-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>
                 <h1>INTERACTIVE RESUME</h1>
@@ -150,41 +152,58 @@ export function PortfolioPage() {
                   </a>
                 </div>
               </div>
+              </div>
+              <MatrixSectionVeil active={activeId === 'hero'} />
             </section>
 
             <section
               id="overview"
               className={`portfolio-section${activeId === 'overview' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
-              <StoryHomePage />
+              <div className="portfolio-section__content">
+                <StoryHomePage />
+              </div>
+              <MatrixSectionVeil active={activeId === 'overview'} />
             </section>
 
             <section
               id="pipeline"
               className={`portfolio-section${activeId === 'pipeline' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
-              <PipelinePage />
+              <div className="portfolio-section__content">
+                <PipelinePage />
+              </div>
+              <MatrixSectionVeil active={activeId === 'pipeline'} />
             </section>
 
             <section
               id="security"
               className={`portfolio-section${activeId === 'security' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
-              <OrchestrationPage />
+              <div className="portfolio-section__content">
+                <OrchestrationPage />
+              </div>
+              <MatrixSectionVeil active={activeId === 'security'} />
             </section>
 
             <section
               id="automation"
               className={`portfolio-section${activeId === 'automation' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
-              <AutomationPage />
+              <div className="portfolio-section__content">
+                <AutomationPage />
+              </div>
+              <MatrixSectionVeil active={activeId === 'automation'} />
             </section>
 
             <section
               id="contact"
               className={`portfolio-section${activeId === 'contact' ? ' portfolio-section--active' : ' portfolio-section--dim'}`}
             >
-              <ContactPage />
+              <div className="portfolio-section__content">
+                <ContactPage />
+              </div>
+              <MatrixSectionVeil active={activeId === 'contact'} />
             </section>
           </div>
         </div>

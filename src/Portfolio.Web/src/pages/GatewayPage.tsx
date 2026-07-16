@@ -140,11 +140,6 @@ export function GatewayPage() {
       <main className="container gateway-main">
         <div className="gateway-card card">
           <div className="gateway-card__header">
-            <img
-              src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTNubHBxMjV2cGR1NDZ3dHJqMTY5a3RoYXFvMTE4OWdtY29hbnF5ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ip5L71rU6sjcc/giphy.gif"
-              alt="Gateway"
-              className="gateway-card__banner"
-            />
             <span className="badge badge-muted">BLK_01 // GATE</span>
             <h1>GATEWAY</h1>
             <p>Authenticate to unlock the interactive resume story blocks.</p>

@@ -30,14 +30,6 @@
 .contact-hero__sparkles span:nth-child(4) { bottom: 16%; right: 16%; }
 .contact-hero__sparkles span:nth-child(5) { top: 42%; left: 48%; }
 
-.contact-hero__gif {
-  width: min(220px, 70%);
-  border-radius: var(--radius-lg);
-  margin: 0 auto 1rem;
-  display: block;
-  box-shadow: 0 0 32px rgba(0, 255, 102, 0.25);
-}
-
 .contact-hero__eyebrow {
   margin: 0 0 0.35rem;
   font-family: var(--font-mono);
