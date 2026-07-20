@@ -116,22 +116,23 @@ export function PortfolioPage() {
             >
               <div className="portfolio-section__content">
               <div className="portfolio-hero card">
-                <p className="portfolio-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>
+                <p className="portfolio-hero__eyebrow">SYS // BCOMP · FULL-STACK · IOT · API SEC</p>
                 <h1>INTERACTIVE RESUME</h1>
                 <p className="portfolio-hero__prompt">
                   root@portfolio:~$ <span>scroll_to_explore</span>
                 </p>
                 <p className="portfolio-hero__lead">
-                  Liam Olivier — software developer with a newly earned{' '}
-                  <strong>Bachelor of Computing</strong>, focused on{' '}
-                  <strong>Fintech solutions in C#</strong> and hands-on experience building{' '}
-                  <strong>API security tooling</strong>. One continuous story below — no gate, no
-                  signup.
+                  Liam Olivier — Full-Stack &amp; Systems Engineer. I build lean, production-ready
+                  software, background services, and embedded hardware integrations. Driven by a deep
+                  passion for <strong>IoT devices &amp; microcontrollers</strong>, backed by formal
+                  training in <strong>Siemens LOGO! PLCs</strong> — I treat software like physical
+                  machinery: clean architecture, low overhead, rock-solid stability. One continuous
+                  story below — no gate, no signup.
                 </p>
                 <ul className="portfolio-hero__creds">
-                  <li>Bachelor of Computing</li>
-                  <li>Fintech &amp; enterprise C# development</li>
-                  <li>API hardening, rate limiting &amp; payload filtering</li>
+                  <li>Bachelor of Computing — Belgium Campus</li>
+                  <li>IoT / Microcontrollers (ESP32, Arduino) &amp; Siemens LOGO! PLC</li>
+                  <li>Source control &amp; DevOps — GitHub &amp; Azure DevOps</li>
                 </ul>
                 <div className="portfolio-hero__actions">
                   <button
