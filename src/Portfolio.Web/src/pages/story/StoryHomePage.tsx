@@ -56,7 +56,7 @@ const blocks = [
     id: 'automation',
     num: '04',
     title: 'Automation Hub',
-    description: 'Script repository — reconnaissance and deployment demos.',
+    description: 'Step inside an interactive, retro-styled command-line console — cinematic execution flows, ASCII banners, animated progress bars, radar scans, and rocket launch finales.',
   },
   {
     id: 'contact',

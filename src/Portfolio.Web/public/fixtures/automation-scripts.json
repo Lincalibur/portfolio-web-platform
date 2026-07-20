@@ -1,17 +1,17 @@
 {
-  "title": "Script Repository",
-  "description": "Run cinematic automation demos — ASCII banners, animated progress, radar scans, and rocket launch finales.",
+  "title": "Automation Hub",
+  "description": "Step inside an interactive, retro-styled command-line console powered by real-time execution logic. Test interactive execution scripts built to showcase system scripting and visual feedback loops — cinematic ASCII banners, animated progress bars, radar scans, and rocket launch finales.",
   "scripts": [
     {
       "id": "asset_discovery",
       "filename": "asset_discovery.py",
       "title": "The Reconnaissance Tool",
-      "tagline": "Modular passive reconnaissance & asset mapping",
-      "description": "Enter a target domain and watch a radar scan map your digital footprint with animated progress and a live results tree.",
+      "tagline": "Simulated Recon & Network Telemetry",
+      "description": "Execute live-style radar scans and host discovery scripts that map local network boundaries and inspect endpoint availability in real time. Watch an animated progress bar and live endpoint tree build before your eyes.",
       "highlights": [
-        "ASCII radar scan",
+        "ASCII radar scan with cinematic output",
         "Animated progress bar",
-        "Live endpoint tree"
+        "Live endpoint tree & host telemetry"
       ],
       "language": "python",
       "sourcePath": "/fixtures/scripts/asset_discovery.py",
@@ -30,12 +30,12 @@
       "id": "deploy_env",
       "filename": "deploy_env.sh",
       "title": "The DevOps Framework",
-      "tagline": "Launch sequence automation",
-      "description": "Pick an environment and follow a staged launch — progress bars for each phase, then a rocket lift-off finale when everything is healthy.",
+      "tagline": "Orchestration Sequences — Multi-stage launch automation",
+      "description": "Trigger multi-stage environment deployment simulations complete with validation checks, automated health probes, and a rocket launch finale on success. Pick an environment and follow a staged launch — progress bars for each phase, then lift-off.",
       "highlights": [
-        "Multi-phase progress UI",
-        "Rocket ASCII animation",
-        "Launch complete finale"
+        "Cinematic execution flow with custom ASCII title banners",
+        "Multi-phase progress UI with automated health probes",
+        "Rocket ASCII animation — launch complete finale"
       ],
       "language": "bash",
       "sourcePath": "/fixtures/scripts/deploy_env.sh",

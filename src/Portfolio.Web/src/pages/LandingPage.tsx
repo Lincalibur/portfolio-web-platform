@@ -46,22 +46,23 @@ export function LandingPage() {
 
       <main className="landing-hero container">
         <div className="landing-hero__content">
-          <p className="landing-hero__eyebrow">SYS // BCOMP · FINTECH · API SEC</p>
+          <p className="landing-hero__eyebrow">SYS // BCOMP · FULL-STACK · IOT · API SEC</p>
           <h1>INTERACTIVE RESUME</h1>
           <p className="landing-hero__prompt">
             root@portfolio:~$ <span>awaiting_operator_handshake</span>
           </p>
           <p className="landing-hero__lead">
-            Liam Olivier — software developer with a newly earned <strong>Bachelor of Computing</strong>,
-            focused on <strong>Fintech solutions in C#</strong> and hands-on experience building{' '}
-            <strong>API security tooling</strong>. Explore a gated portfolio that demonstrates secure
-            gateways, CI/CD pipelines, and live security simulations.
+            Liam Olivier — Full-Stack &amp; Systems Engineer. I build lean, production-ready software,
+            background services, and embedded hardware integrations. Driven by a deep passion for{' '}
+            <strong>IoT devices &amp; microcontrollers</strong>, backed by formal training in{' '}
+            <strong>Siemens LOGO! PLCs</strong> — I treat software like physical machinery: clean
+            architecture, low overhead, rock-solid stability.
           </p>
 
           <ul className="landing-credentials">
-            <li>Bachelor of Computing</li>
-            <li>Fintech &amp; enterprise C# development</li>
-            <li>API hardening, rate limiting &amp; payload filtering</li>
+            <li>Bachelor of Computing — Belgium Campus</li>
+            <li>IoT / Microcontrollers (ESP32, Arduino) &amp; Siemens LOGO! PLC</li>
+            <li>Source control &amp; DevOps — GitHub &amp; Azure DevOps</li>
           </ul>
 
           <div className="landing-hero__actions">
@@ -96,7 +97,7 @@ export function LandingPage() {
             { num: '01', title: 'Gateway', desc: 'Email OTP and JWT gatekeeper' },
             { num: '02', title: 'Deploy Pipeline', desc: 'CI/CD flow with sanitized YAML snippets' },
             { num: '03', title: 'API Security', desc: 'Interactive gateway circuit & attack simulation' },
-            { num: '04', title: 'Automation', desc: 'Script repository with live console demos' },
+            { num: '04', title: 'Automation Hub', desc: 'Cinematic terminal — ASCII banners, radar scans & rocket launch finales' },
             { num: '05', title: 'Contact', desc: 'Finale — email, cell, GitHub & LinkedIn' },
           ].map((block) => (
             <article key={block.num} className="landing-block card">
